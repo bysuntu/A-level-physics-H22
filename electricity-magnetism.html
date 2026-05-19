@@ -4,873 +4,880 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Electricity &amp; Magnetism — H2 Physics Notes</title>
+
+  <!-- MathJax -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        macros: {
+          eps: '\\varepsilon',
+          muz: '\\mu_0',
+          epz: '\\varepsilon_0'
+        }
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
   <style>
     :root {
-      --bg:       #0f1117;
-      --surface:  #1a1d27;
-      --card:     #21253a;
-      --border:   #2e3350;
-      --accent:   #5b8cff;
-      --accent2:  #a78bfa;
-      --green:    #34d399;
-      --yellow:   #fbbf24;
-      --red:      #f87171;
-      --text:     #e2e8f0;
-      --muted:    #94a3b8;
-      --eq-bg:    #12162b;
+      --bg:      #0f1117;
+      --surface: #1a1d27;
+      --card:    #21253a;
+      --border:  #2e3350;
+      --accent:  #5b8cff;
+      --accent2: #a78bfa;
+      --green:   #34d399;
+      --yellow:  #fbbf24;
+      --red:     #f87171;
+      --text:    #e2e8f0;
+      --muted:   #94a3b8;
+      --eq-bg:   #12162b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      padding: 2rem 1rem;
+      line-height: 1.65;
+      padding: 2.5rem 1rem;
     }
+
     /* ── Layout ── */
-    .page { max-width: 960px; margin: 0 auto; }
+    .page { max-width: 980px; margin: 0 auto; }
+
     header { text-align: center; margin-bottom: 3rem; }
-    header h1 { font-size: 2rem; font-weight: 700; color: var(--accent); letter-spacing: .5px; }
-    header p  { color: var(--muted); margin-top: .4rem; font-size: .95rem; }
+    header h1 {
+      font-size: 2.1rem; font-weight: 700;
+      color: var(--accent); letter-spacing: .4px;
+    }
+    header p { color: var(--muted); margin-top: .45rem; font-size: .95rem; }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex; gap: 1.4rem; flex-wrap: wrap;
+      margin-bottom: 2rem; font-size: .85rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: .45rem; }
 
     /* ── Table of Contents ── */
     .toc {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.2rem 1.6rem;
-      margin-bottom: 2.5rem;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 3rem;
     }
-    .toc h2 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: .8rem; }
+    .toc h2 {
+      font-size: .8rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: .8rem;
+    }
     .toc ol { padding-left: 1.4rem; }
     .toc li { margin: .3rem 0; }
     .toc a  { color: var(--accent); text-decoration: none; font-size: .95rem; }
     .toc a:hover { text-decoration: underline; }
 
-    /* ── Topic Section ── */
-    .topic { margin-bottom: 3rem; }
+    /* ── Topic section ── */
+    .topic { margin-bottom: 3.5rem; }
     .topic-header {
-      display: flex;
-      align-items: center;
-      gap: .8rem;
-      margin-bottom: 1.2rem;
+      display: flex; align-items: center;
+      gap: .8rem; margin-bottom: 1.4rem;
     }
     .topic-num {
-      background: var(--accent);
-      color: #fff;
-      font-weight: 700;
-      font-size: .8rem;
-      padding: .25rem .6rem;
-      border-radius: 6px;
-      letter-spacing: .5px;
+      background: var(--accent); color: #fff;
+      font-weight: 700; font-size: .78rem;
+      padding: .25rem .65rem; border-radius: 6px; letter-spacing: .5px;
     }
-    .topic-header h2 { font-size: 1.3rem; color: var(--text); }
+    .topic-header h2 { font-size: 1.3rem; }
 
-    /* ── Equation Card ── */
+    /* ── Equation card ── */
     .eq-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.3rem;
       overflow: hidden;
     }
-    .eq-title {
+    .eq-name {
       background: var(--eq-bg);
-      padding: .7rem 1.2rem;
-      font-size: .8rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
+      padding: .6rem 1.3rem;
+      font-size: .78rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .9px;
       border-bottom: 1px solid var(--border);
     }
-    .eq-formula {
-      padding: 1rem 1.4rem;
-      font-size: 1.25rem;
-      font-family: 'Courier New', monospace;
+
+    /* LaTeX display area */
+    .eq-math {
+      padding: .9rem 1.6rem .7rem;
+      font-size: 1.15rem;
       color: var(--yellow);
-      letter-spacing: .3px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
     }
-    .eq-alt {
-      padding: 0 1.4rem .6rem;
+    /* secondary (alt) forms */
+    .eq-math-alt {
+      padding: .2rem 1.6rem .7rem;
       font-size: 1rem;
-      font-family: 'Courier New', monospace;
       color: #c4b5fd;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
     }
 
-    /* ── Variable Table ── */
-    .var-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .9rem;
-    }
+    /* ── Variable table ── */
+    .var-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
     .var-table th {
-      background: #1e2235;
-      color: var(--muted);
-      text-transform: uppercase;
-      font-size: .75rem;
-      letter-spacing: .8px;
-      padding: .55rem 1rem;
-      text-align: left;
+      background: #1e2235; color: var(--muted);
+      text-transform: uppercase; font-size: .72rem;
+      letter-spacing: .8px; padding: .55rem 1rem; text-align: left;
     }
     .var-table td {
       padding: .5rem 1rem;
       border-top: 1px solid var(--border);
-      vertical-align: top;
+      vertical-align: middle;
     }
     .var-table tr:hover td { background: rgba(255,255,255,.03); }
-    .sym   { font-family: 'Courier New', monospace; color: var(--green); font-weight: 600; white-space: nowrap; }
-    .unit  { font-family: 'Courier New', monospace; color: var(--accent2); white-space: nowrap; }
+    .sym  { color: var(--green); font-weight: 600; }
+    .unit { font-family: 'Courier New', monospace; color: var(--accent2); white-space: nowrap; }
     .badge {
-      display: inline-block;
-      font-size: .7rem;
-      font-weight: 700;
-      padding: .15rem .5rem;
-      border-radius: 4px;
-      letter-spacing: .5px;
+      display: inline-block; font-size: .68rem; font-weight: 700;
+      padding: .15rem .5rem; border-radius: 4px; letter-spacing: .5px;
     }
     .badge-v { background: #3b1f2b; color: var(--red); }
     .badge-s { background: #1a2e1f; color: var(--green); }
     .badge-c { background: #1e2235; color: var(--muted); }
 
-    /* ── Note Box ── */
+    /* ── Note ── */
     .note {
       background: #1a2332;
       border-left: 3px solid var(--accent);
-      padding: .6rem 1rem;
-      font-size: .88rem;
-      color: var(--muted);
-      margin: .8rem 1.2rem 1rem;
+      padding: .6rem 1.1rem;
+      font-size: .87rem; color: var(--muted);
+      margin: 0 1.2rem 1rem;
       border-radius: 0 6px 6px 0;
     }
 
-    /* ── Divider ── */
     hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
-    /* ── Legend ── */
-    .legend {
-      display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-      font-size: .85rem;
+    footer {
+      text-align: center; color: var(--muted);
+      font-size: .8rem; margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
     }
-    .legend-item { display: flex; align-items: center; gap: .4rem; }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <header>
-    <h1>Electricity &amp; Magnetism</h1>
-    <p>A-level Study Guide Physics (Higher 2) — Edition H2.2 &nbsp;|&nbsp; Syllabus 9749</p>
-  </header>
+<header>
+  <h1>Electricity &amp; Magnetism</h1>
+  <p>A-level Study Guide Physics (Higher 2) &nbsp;·&nbsp; Edition H2.2 &nbsp;·&nbsp; Syllabus 9749</p>
+</header>
 
-  <!-- Legend -->
-  <div class="legend">
-    <div class="legend-item"><span class="badge badge-v">VECTOR</span> has magnitude &amp; direction</div>
-    <div class="legend-item"><span class="badge badge-s">SCALAR</span> magnitude only</div>
-    <div class="legend-item"><span class="badge badge-c">CONST</span> physical constant</div>
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><span class="badge badge-v">VECTOR</span> has magnitude &amp; direction</div>
+  <div class="legend-item"><span class="badge badge-s">SCALAR</span> magnitude only</div>
+  <div class="legend-item"><span class="badge badge-c">CONST</span> physical constant</div>
+</div>
+
+<!-- TOC -->
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#ef">Electric Fields</a></li>
+    <li><a href="#cap">Capacitance</a></li>
+    <li><a href="#cur">Current of Electricity</a></li>
+    <li><a href="#dc">D.C. Circuits</a></li>
+    <li><a href="#em">Electromagnetism</a></li>
+    <li><a href="#emi">Electromagnetic Induction</a></li>
+    <li><a href="#ac">Alternating Currents</a></li>
+  </ol>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════
+     17  ELECTRIC FIELDS
+════════════════════════════════════════════════ -->
+<section class="topic" id="ef">
+  <div class="topic-header">
+    <span class="topic-num">17</span>
+    <h2>Electric Fields</h2>
   </div>
 
-  <!-- Table of Contents -->
-  <nav class="toc">
-    <h2>Contents</h2>
-    <ol>
-      <li><a href="#electric-fields">Electric Fields</a></li>
-      <li><a href="#capacitance">Capacitance</a></li>
-      <li><a href="#current">Current of Electricity</a></li>
-      <li><a href="#dc-circuits">D.C. Circuits</a></li>
-      <li><a href="#electromagnetism">Electromagnetism</a></li>
-      <li><a href="#emi">Electromagnetic Induction</a></li>
-      <li><a href="#ac">Alternating Currents</a></li>
-    </ol>
-  </nav>
+  <!-- Coulomb -->
+  <div class="eq-card">
+    <div class="eq-name">Coulomb's Law</div>
+    <div class="eq-math">\[ F = \frac{Qq}{4\pi\varepsilon_0 r^2} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(F\)</td><td>Electrostatic force between two point charges</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(Q,\; q\)</td><td>Magnitudes of the two point charges</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space \((= 8.85\times10^{-12}\ \text{F\,m}^{-1})\)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Distance between the two charges</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Force is attractive for unlike charges and repulsive for like charges; direction is determined by the sign of \(Qq\).</div>
+  </div>
 
+  <!-- E definition -->
+  <div class="eq-card">
+    <div class="eq-name">Electric Field Strength — Definition</div>
+    <div class="eq-math">\[ E = \frac{F}{Q} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(E\)</td><td>Electric field strength at a point</td><td class="unit">N C⁻¹ or V m⁻¹</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(F\)</td><td>Force experienced by a small positive test charge at that point</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(Q\)</td><td>Magnitude of the small positive test charge</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       1. ELECTRIC FIELDS
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="electric-fields">
-    <div class="topic-header">
-      <span class="topic-num">17</span>
-      <h2>Electric Fields</h2>
-    </div>
+  <!-- E from point charge -->
+  <div class="eq-card">
+    <div class="eq-name">Electric Field Due to a Point Charge</div>
+    <div class="eq-math">\[ E = \frac{Q}{4\pi\varepsilon_0 r^2} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(E\)</td><td>Electric field strength at distance \(r\) from the charge</td><td class="unit">V m⁻¹</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(Q\)</td><td>Source charge producing the field</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Distance from the point charge to the field point</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- Coulomb's Law -->
-    <div class="eq-card">
-      <div class="eq-title">Coulomb's Law</div>
-      <div class="eq-formula">F = Qq / (4πε₀r²)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">F</td><td>Electrostatic force between two point charges</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">Q, q</td><td>Magnitudes of the two point charges</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ε₀</td><td>Permittivity of free space (= 8.85 × 10⁻¹² F m⁻¹)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">r</td><td>Distance between the two charges</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Direction of <b>F</b>: attractive for unlike charges, repulsive for like charges. The magnitude formula applies; direction is determined by the sign of the product Qq.</div>
-    </div>
+  <!-- V from point charge -->
+  <div class="eq-card">
+    <div class="eq-name">Electric Potential Due to a Point Charge</div>
+    <div class="eq-math">\[ V = \frac{Q}{4\pi\varepsilon_0 r} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V\)</td><td>Electric potential — work done per unit positive charge bringing a charge from infinity to that point</td><td class="unit">V (J C⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(Q\)</td><td>Source charge</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Distance from the source charge</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">\(V\) is negative for a negative source charge; \(V\to 0\) as \(r\to\infty\).</div>
+  </div>
 
-    <!-- Electric Field Strength (definition) -->
-    <div class="eq-card">
-      <div class="eq-title">Electric Field Strength — Definition</div>
-      <div class="eq-formula">E = F / Q</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">E</td><td>Electric field strength at a point</td><td class="unit">N C⁻¹ or V m⁻¹</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">F</td><td>Force experienced by a positive test charge placed at the point</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">Q</td><td>Magnitude of the small positive test charge</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- E–V -->
+  <div class="eq-card">
+    <div class="eq-name">Relationship Between \(E\) and \(V\)</div>
+    <div class="eq-math">\[ E = -\frac{dV}{dr} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(E\)</td><td>Component of electric field in the direction of increasing \(r\)</td><td class="unit">V m⁻¹</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Electric potential</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Distance coordinate</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">The negative sign means \(\mathbf{E}\) points from high \(V\) to low \(V\) — downhill on a potential map.</div>
+  </div>
 
-    <!-- E due to point charge -->
-    <div class="eq-card">
-      <div class="eq-title">Electric Field Due to a Point Charge</div>
-      <div class="eq-formula">E = Q / (4πε₀r²)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">E</td><td>Electric field strength at distance r from the charge</td><td class="unit">V m⁻¹</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">Q</td><td>Source charge producing the field</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ε₀</td><td>Permittivity of free space (= 8.85 × 10⁻¹² F m⁻¹)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">r</td><td>Distance from the point charge to the field point</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Work done -->
+  <div class="eq-card">
+    <div class="eq-name">Work Done Moving a Charge</div>
+    <div class="eq-math">\[ W = QV \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(W\)</td><td>Work done on charge \(Q\) moving through potential difference \(V\)</td><td class="unit">J</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(Q\)</td><td>Charge being moved</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Potential difference between start and end points</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <!-- Electric Potential -->
-    <div class="eq-card">
-      <div class="eq-title">Electric Potential Due to a Point Charge</div>
-      <div class="eq-formula">V = Q / (4πε₀r)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V</td><td>Electric potential at distance r (work done per unit positive charge from infinity to the point)</td><td class="unit">V (J C⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Q</td><td>Source charge</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ε₀</td><td>Permittivity of free space</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">r</td><td>Distance from the source charge</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">V is negative for a negative source charge; V = 0 at r → ∞.</div>
-    </div>
+<hr />
 
-    <!-- E–V relationship -->
-    <div class="eq-card">
-      <div class="eq-title">Relationship Between E and V</div>
-      <div class="eq-formula">E = −dV / dr</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">E</td><td>Electric field strength (component in the direction of increasing r)</td><td class="unit">V m⁻¹</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">V</td><td>Electric potential</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">r</td><td>Distance along the direction being considered</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">The negative sign means <b>E</b> points from high V to low V (downhill on a potential map).</div>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     18  CAPACITANCE
+════════════════════════════════════════════════ -->
+<section class="topic" id="cap">
+  <div class="topic-header">
+    <span class="topic-num">18</span>
+    <h2>Capacitance</h2>
+  </div>
 
-    <!-- Work done -->
-    <div class="eq-card">
-      <div class="eq-title">Work Done Moving a Charge</div>
-      <div class="eq-formula">W = QV</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">W</td><td>Work done on charge Q moving through potential difference V</td><td class="unit">J</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Q</td><td>Charge being moved</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V</td><td>Potential difference between start and end points</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="eq-card">
+    <div class="eq-name">Capacitance — Definition</div>
+    <div class="eq-math">\[ Q = CV \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(Q\)</td><td>Charge stored on one plate</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C\)</td><td>Capacitance — charge stored per unit potential difference</td><td class="unit">F (C V⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Potential difference across the capacitor</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <hr />
+  <div class="eq-card">
+    <div class="eq-name">Parallel Plate Capacitance</div>
+    <div class="eq-math">\[ C = \frac{\varepsilon_0\,\varepsilon_r\, A}{d} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space \((= 8.85\times10^{-12}\ \text{F\,m}^{-1})\)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_r\)</td><td>Relative permittivity (dielectric constant) of the material between the plates</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(A\)</td><td>Overlapping area of the plates</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(d\)</td><td>Separation between the plates</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       2. CAPACITANCE
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="capacitance">
-    <div class="topic-header">
-      <span class="topic-num">18</span>
-      <h2>Capacitance</h2>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Energy Stored in a Capacitor</div>
+    <div class="eq-math">\[ W = \tfrac{1}{2}QV = \tfrac{1}{2}CV^2 = \frac{Q^2}{2C} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(W\)</td><td>Energy stored in the electric field of the capacitor</td><td class="unit">J</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(Q\)</td><td>Charge stored</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Potential difference across the capacitor</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- Q = CV -->
-    <div class="eq-card">
-      <div class="eq-title">Capacitance — Definition</div>
-      <div class="eq-formula">Q = CV</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">Q</td><td>Charge stored on one plate of the capacitor</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C</td><td>Capacitance (charge stored per unit potential difference)</td><td class="unit">F (C V⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V</td><td>Potential difference across the capacitor</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Capacitors in Series</div>
+    <div class="eq-math">\[ \frac{1}{C} = \frac{1}{C_1} + \frac{1}{C_2} + \frac{1}{C_3} + \cdots \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(C\)</td><td>Total equivalent capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C_1,C_2\ldots\)</td><td>Individual capacitances connected in series</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- Parallel plate C -->
-    <div class="eq-card">
-      <div class="eq-title">Parallel Plate Capacitance</div>
-      <div class="eq-formula">C = ε₀ εᵣ A / d</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">C</td><td>Capacitance of the parallel plate capacitor</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ε₀</td><td>Permittivity of free space (= 8.85 × 10⁻¹² F m⁻¹)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">εᵣ</td><td>Relative permittivity (dielectric constant) of the material between plates</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">A</td><td>Overlapping area of the plates</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">d</td><td>Separation between the plates</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Capacitors in Parallel</div>
+    <div class="eq-math">\[ C = C_1 + C_2 + C_3 + \cdots \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(C\)</td><td>Total equivalent capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C_1,C_2\ldots\)</td><td>Individual capacitances connected in parallel</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- Energy stored -->
-    <div class="eq-card">
-      <div class="eq-title">Energy Stored in a Capacitor</div>
-      <div class="eq-formula">W = ½ QV = ½ CV² = Q² / (2C)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">W</td><td>Energy stored in the electric field of the capacitor</td><td class="unit">J</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Q</td><td>Charge stored</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V</td><td>Potential difference across the capacitor</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Capacitor Discharging Through Resistance \(R\)</div>
+    <div class="eq-math">\[ Q = Q_0\,e^{-t/RC} \]</div>
+    <div class="eq-math-alt">\[ V = V_0\,e^{-t/RC} \qquad I = I_0\,e^{-t/RC} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(Q\)</td><td>Charge remaining at time \(t\)</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(Q_0\)</td><td>Initial charge at \(t=0\)</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Voltage across the capacitor at time \(t\)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_0\)</td><td>Initial voltage at \(t=0\)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current at time \(t\)</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_0\)</td><td>Initial current at \(t=0\) \((= V_0/R)\)</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(t\)</td><td>Time elapsed since start of discharge</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R\)</td><td>Resistance in the discharge circuit</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- Series & Parallel -->
-    <div class="eq-card">
-      <div class="eq-title">Capacitors in Series</div>
-      <div class="eq-formula">1/C = 1/C₁ + 1/C₂ + 1/C₃ + …</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">C</td><td>Total (equivalent) capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C₁, C₂ …</td><td>Individual capacitances in series</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Capacitor Charging from Supply \(V_0\)</div>
+    <div class="eq-math">\[ Q = Q_0\!\left(1 - e^{-t/RC}\right) \]</div>
+    <div class="eq-math-alt">\[ V = V_0\!\left(1 - e^{-t/RC}\right) \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(Q\)</td><td>Charge on capacitor at time \(t\)</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(Q_0\)</td><td>Final (maximum) charge \(= CV_0\)</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Voltage across the capacitor at time \(t\)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_0\)</td><td>Supply (EMF) voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(t\)</td><td>Time elapsed since charging began</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R\)</td><td>Resistance in the charging circuit</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Capacitors in Parallel</div>
-      <div class="eq-formula">C = C₁ + C₂ + C₃ + …</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">C</td><td>Total (equivalent) capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C₁, C₂ …</td><td>Individual capacitances in parallel</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Time Constant</div>
+    <div class="eq-math">\[ \tau = RC \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(\tau\)</td><td>Time constant — time for \(Q\), \(V\) or \(I\) to fall to \(1/e \approx 37\%\) of its initial value during discharge</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R\)</td><td>Resistance in the circuit</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <!-- Charging/discharging -->
-    <div class="eq-card">
-      <div class="eq-title">Capacitor Discharging (through resistor R)</div>
-      <div class="eq-formula">Q = Q₀ e^(−t / RC)</div>
-      <div class="eq-alt">V = V₀ e^(−t / RC)</div>
-      <div class="eq-alt">I = I₀ e^(−t / RC)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">Q</td><td>Charge remaining at time t</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Q₀</td><td>Initial charge at t = 0</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V</td><td>Voltage across capacitor at time t</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V₀</td><td>Initial voltage at t = 0</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current at time t</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I₀</td><td>Initial current at t = 0 (= V₀/R)</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">t</td><td>Time elapsed since start of discharge</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R</td><td>Resistance in discharge circuit</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<hr />
 
-    <div class="eq-card">
-      <div class="eq-title">Capacitor Charging (from V₀ through resistor R)</div>
-      <div class="eq-formula">Q = Q₀ (1 − e^(−t / RC))</div>
-      <div class="eq-alt">V = V₀ (1 − e^(−t / RC))</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">Q</td><td>Charge on capacitor at time t</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Q₀</td><td>Final (maximum) charge = CV₀</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V</td><td>Voltage across capacitor at time t</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V₀</td><td>Supply (EMF) voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">t</td><td>Time elapsed since charging began</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R</td><td>Resistance in the charging circuit</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     19  CURRENT OF ELECTRICITY
+════════════════════════════════════════════════ -->
+<section class="topic" id="cur">
+  <div class="topic-header">
+    <span class="topic-num">19</span>
+    <h2>Current of Electricity</h2>
+  </div>
 
-    <!-- Time constant -->
-    <div class="eq-card">
-      <div class="eq-title">Time Constant</div>
-      <div class="eq-formula">τ = RC</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">τ</td><td>Time constant — time for Q, V, or I to fall to 1/e (≈ 37%) of initial value during discharge</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R</td><td>Resistance in the circuit</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">C</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="eq-card">
+    <div class="eq-name">Electric Current — Definition</div>
+    <div class="eq-math">\[ I = \frac{\Delta Q}{\Delta t} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(I\)</td><td>Electric current — rate of flow of charge</td><td class="unit">A (C s⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\Delta Q\)</td><td>Charge passing a cross-section in time \(\Delta t\)</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\Delta t\)</td><td>Time interval</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <hr />
+  <div class="eq-card">
+    <div class="eq-name">Drift Velocity of Charge Carriers</div>
+    <div class="eq-math">\[ I = nAvq \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(I\)</td><td>Electric current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(n\)</td><td>Number density of charge carriers (number per unit volume)</td><td class="unit">m⁻³</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(A\)</td><td>Cross-sectional area of the conductor</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(v\)</td><td>Mean drift speed (magnitude of drift velocity) of carriers</td><td class="unit">m s⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(q\)</td><td>Charge per carrier (electrons: \(q = 1.6\times10^{-19}\ \text{C}\))</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       3. CURRENT OF ELECTRICITY
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="current">
-    <div class="topic-header">
-      <span class="topic-num">19</span>
-      <h2>Current of Electricity</h2>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Ohm's Law</div>
+    <div class="eq-math">\[ V = IR \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V\)</td><td>Potential difference across the conductor</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current through the conductor</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R\)</td><td>Resistance (constant for an ohmic conductor at constant temperature)</td><td class="unit">Ω (V A⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Electric Current — Definition</div>
-      <div class="eq-formula">I = ΔQ / Δt</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">I</td><td>Electric current (rate of flow of charge)</td><td class="unit">A (C s⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ΔQ</td><td>Charge passing a cross-section</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Δt</td><td>Time interval</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Resistance and Resistivity</div>
+    <div class="eq-math">\[ R = \frac{\rho L}{A} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(R\)</td><td>Resistance of the conductor</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\rho\)</td><td>Resistivity — intrinsic property of the material</td><td class="unit">Ω m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(L\)</td><td>Length of the conductor</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(A\)</td><td>Cross-sectional area</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Drift Velocity of Charge Carriers</div>
-      <div class="eq-formula">I = nAvq</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">I</td><td>Electric current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">n</td><td>Number density of charge carriers (number per unit volume)</td><td class="unit">m⁻³</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">A</td><td>Cross-sectional area of the conductor</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">v</td><td>Mean drift speed (magnitude of drift velocity) of charge carriers</td><td class="unit">m s⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">q</td><td>Charge per carrier (for electrons: q = 1.6 × 10⁻¹⁹ C)</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Electrical Power</div>
+    <div class="eq-math">\[ P = IV = I^2 R = \frac{V^2}{R} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(P\)</td><td>Electrical power dissipated in the component</td><td class="unit">W (J s⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current through the component</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V\)</td><td>Potential difference across the component</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R\)</td><td>Resistance of the component</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Ohm's Law</div>
-      <div class="eq-formula">V = IR</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V</td><td>Potential difference across the conductor</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current through the conductor</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R</td><td>Resistance (constant for ohmic conductors at constant temperature)</td><td class="unit">Ω (V A⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Electromotive Force (EMF) — Definition</div>
+    <div class="eq-math">\[ \varepsilon = \frac{W}{Q} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(\varepsilon\)</td><td>Electromotive force — energy converted per unit charge by the source</td><td class="unit">V (J C⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(W\)</td><td>Energy transferred to the circuit by the source</td><td class="unit">J</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(Q\)</td><td>Charge passing through the source</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Resistance and Resistivity</div>
-      <div class="eq-formula">R = ρL / A</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">R</td><td>Resistance of the conductor</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ρ</td><td>Resistivity — intrinsic property of the material</td><td class="unit">Ω m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">L</td><td>Length of the conductor</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">A</td><td>Cross-sectional area of the conductor</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Terminal Potential Difference</div>
+    <div class="eq-math">\[ V = \varepsilon - Ir \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V\)</td><td>Terminal potential difference (voltage across the external circuit)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\varepsilon\)</td><td>EMF of the source</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current drawn from the source</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Internal resistance of the source</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">\(Ir\) is the "lost volts" — energy dissipated per coulomb inside the source itself.</div>
+  </div>
+</section>
 
-    <div class="eq-card">
-      <div class="eq-title">Electrical Power</div>
-      <div class="eq-formula">P = IV = I²R = V² / R</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">P</td><td>Electrical power dissipated</td><td class="unit">W (J s⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current through the component</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V</td><td>Potential difference across the component</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R</td><td>Resistance of the component</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<hr />
 
-    <div class="eq-card">
-      <div class="eq-title">Electromotive Force (EMF) — Definition</div>
-      <div class="eq-formula">ε = W / Q</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">ε</td><td>Electromotive force — energy converted per unit charge by the source</td><td class="unit">V (J C⁻¹)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">W</td><td>Energy transferred to the circuit by the source</td><td class="unit">J</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Q</td><td>Charge passing through the source</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     20  D.C. CIRCUITS
+════════════════════════════════════════════════ -->
+<section class="topic" id="dc">
+  <div class="topic-header">
+    <span class="topic-num">20</span>
+    <h2>D.C. Circuits</h2>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Terminal Potential Difference</div>
-      <div class="eq-formula">V = ε − Ir</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V</td><td>Terminal potential difference (voltage across external circuit)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ε</td><td>EMF of the source</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current drawn from the source</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">r</td><td>Internal resistance of the source</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Ir is the "lost volts" — energy dissipated per coulomb inside the source itself.</div>
-    </div>
-  </section>
+  <div class="eq-card">
+    <div class="eq-name">Resistors in Series</div>
+    <div class="eq-math">\[ R = R_1 + R_2 + R_3 + \cdots \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(R\)</td><td>Total equivalent resistance</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R_1,R_2\ldots\)</td><td>Individual resistances connected in series</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <hr />
+  <div class="eq-card">
+    <div class="eq-name">Resistors in Parallel</div>
+    <div class="eq-math">\[ \frac{1}{R} = \frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3} + \cdots \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(R\)</td><td>Total equivalent resistance</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R_1,R_2\ldots\)</td><td>Individual resistances connected in parallel</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       4. D.C. CIRCUITS
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="dc-circuits">
-    <div class="topic-header">
-      <span class="topic-num">20</span>
-      <h2>D.C. Circuits</h2>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Potential Divider</div>
+    <div class="eq-math">\[ V_{\text{out}} = V_{\text{in}} \times \frac{R_2}{R_1 + R_2} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V_{\text{out}}\)</td><td>Output voltage taken across \(R_2\)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_{\text{in}}\)</td><td>Input (supply) voltage across both resistors</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R_1\)</td><td>Upper (series) resistor</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(R_2\)</td><td>Resistor across which output is measured</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Resistors in Series</div>
-      <div class="eq-formula">R = R₁ + R₂ + R₃ + …</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">R</td><td>Total equivalent resistance</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R₁, R₂ …</td><td>Individual resistances in series</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Kirchhoff's Current Law (KCL)</div>
+    <div class="eq-math">\[ \sum I_{\text{in}} = \sum I_{\text{out}} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(I_{\text{in}}\)</td><td>Currents flowing into a junction</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_{\text{out}}\)</td><td>Currents flowing out of the junction</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Conservation of charge — charge cannot accumulate at a junction.</div>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Resistors in Parallel</div>
-      <div class="eq-formula">1/R = 1/R₁ + 1/R₂ + 1/R₃ + …</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">R</td><td>Total equivalent resistance</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R₁, R₂ …</td><td>Individual resistances in parallel</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Kirchhoff's Voltage Law (KVL)</div>
+    <div class="eq-math">\[ \sum \varepsilon = \sum IR \quad \text{(around any closed loop)} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(\sum\varepsilon\)</td><td>Sum of all EMFs around a closed loop</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\sum IR\)</td><td>Sum of all potential drops around the same loop</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Conservation of energy — net work done around any closed loop is zero.</div>
+  </div>
+</section>
 
-    <div class="eq-card">
-      <div class="eq-title">Potential Divider</div>
-      <div class="eq-formula">V_out = V_in × R₂ / (R₁ + R₂)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V_out</td><td>Output voltage taken across R₂</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V_in</td><td>Input (supply) voltage across both resistors</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R₁</td><td>Resistance of the upper (series) resistor</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">R₂</td><td>Resistance across which output is taken</td><td class="unit">Ω</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<hr />
 
-    <div class="eq-card">
-      <div class="eq-title">Kirchhoff's Current Law (KCL)</div>
-      <div class="eq-formula">Σ I_in = Σ I_out</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">I_in</td><td>Currents flowing into a junction</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I_out</td><td>Currents flowing out of the junction</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Statement of conservation of charge — charge cannot accumulate at a junction.</div>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     21  ELECTROMAGNETISM
+════════════════════════════════════════════════ -->
+<section class="topic" id="em">
+  <div class="topic-header">
+    <span class="topic-num">21</span>
+    <h2>Electromagnetism</h2>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Kirchhoff's Voltage Law (KVL)</div>
-      <div class="eq-formula">Σ EMF = Σ IR  (around any closed loop)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">Σ EMF</td><td>Sum of all EMFs around a closed loop</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Σ IR</td><td>Sum of all potential drops (I × R) around the same loop</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Statement of conservation of energy — net work done around any closed loop is zero.</div>
-    </div>
-  </section>
+  <div class="eq-card">
+    <div class="eq-name">Force on a Current-Carrying Conductor</div>
+    <div class="eq-math">\[ F = BIL\sin\theta \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(F\)</td><td>Magnetic force on the conductor</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density of the external field</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current in the conductor</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(L\)</td><td>Length of conductor within the magnetic field</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\theta\)</td><td>Angle between the current direction and \(\mathbf{B}\)</td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Direction given by Fleming's Left-Hand Rule (thumb = force, index finger = field, middle finger = current).</div>
+  </div>
 
-  <hr />
+  <div class="eq-card">
+    <div class="eq-name">Force on a Moving Charge (Lorentz Force)</div>
+    <div class="eq-math">\[ F = Bqv\sin\theta \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(F\)</td><td>Magnetic force on the charged particle</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(q\)</td><td>Charge of the particle</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(v\)</td><td>Speed of the particle</td><td class="unit">m s⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\theta\)</td><td>Angle between the velocity \(\mathbf{v}\) and \(\mathbf{B}\)</td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">This force is always perpendicular to \(\mathbf{v}\); it does no work and does not change the particle's speed.</div>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       5. ELECTROMAGNETISM
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="electromagnetism">
-    <div class="topic-header">
-      <span class="topic-num">21</span>
-      <h2>Electromagnetism</h2>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Magnetic Field Due to a Long Straight Wire</div>
+    <div class="eq-math">\[ B = \frac{\mu_0 I}{2\pi d} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density at perpendicular distance \(d\) from the wire</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(\mu_0\)</td><td>Permeability of free space \((= 4\pi\times10^{-7}\ \text{H\,m}^{-1})\)</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current in the wire</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(d\)</td><td>Perpendicular distance from the wire to the field point</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Direction given by the right-hand grip rule: thumb along current, fingers curl in direction of \(\mathbf{B}\).</div>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Force on a Current-Carrying Conductor</div>
-      <div class="eq-formula">F = BIL sinθ</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">F</td><td>Magnetic force on the conductor</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">B</td><td>Magnetic flux density of the external field</td><td class="unit">T (kg s⁻² A⁻¹)</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current in the conductor</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">L</td><td>Length of conductor within the magnetic field</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">θ</td><td>Angle between the direction of current and the direction of <b>B</b></td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Direction of <b>F</b> given by Fleming's Left-Hand Rule (thumb = force, index = field, middle = current).</div>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Magnetic Field at the Centre of a Circular Coil</div>
+    <div class="eq-math">\[ B = \frac{\mu_0 N I}{2r} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density at the centre of the coil</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(\mu_0\)</td><td>Permeability of free space</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(N\)</td><td>Number of turns in the coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current through the coil</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Radius of the circular coil</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Force on a Moving Charge (Lorentz Force)</div>
-      <div class="eq-formula">F = Bqv sinθ</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">F</td><td>Magnetic force on the charged particle</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">B</td><td>Magnetic flux density</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">q</td><td>Charge of the particle</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">v</td><td>Speed of the particle</td><td class="unit">m s⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">θ</td><td>Angle between velocity vector and <b>B</b></td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">This force is always perpendicular to <b>v</b>; it does no work and does not change the particle's speed.</div>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Magnetic Field Inside a Solenoid</div>
+    <div class="eq-math">\[ B = \mu_0 n I \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density inside the solenoid (uniform near the centre)</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(\mu_0\)</td><td>Permeability of free space</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(n\)</td><td>Number of turns per unit length \((= N/L)\)</td><td class="unit">m⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current through the solenoid</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Magnetic Field Due to a Long Straight Wire</div>
-      <div class="eq-formula">B = μ₀I / (2πd)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">B</td><td>Magnetic flux density at distance d from the wire</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">μ₀</td><td>Permeability of free space (= 4π × 10⁻⁷ H m⁻¹)</td><td class="unit">H m⁻¹ (T m A⁻¹)</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">I</td><td>Current in the wire</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">d</td><td>Perpendicular distance from the wire to the field point</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Direction given by the right-hand grip rule: thumb along current, fingers curl in direction of <b>B</b>.</div>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Hall Voltage</div>
+    <div class="eq-math">\[ V_H = \frac{BI}{ntq} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V_H\)</td><td>Hall voltage across the width of the sample</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density applied perpendicular to the current</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current through the sample</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(n\)</td><td>Number density of charge carriers in the sample</td><td class="unit">m⁻³</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(t\)</td><td>Thickness of the sample in the direction of \(\mathbf{B}\)</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(q\)</td><td>Charge per carrier</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <div class="eq-card">
-      <div class="eq-title">Magnetic Field at the Centre of a Circular Coil</div>
-      <div class="eq-formula">B = μ₀NI / (2r)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">B</td><td>Magnetic flux density at the centre of the coil</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">μ₀</td><td>Permeability of free space (= 4π × 10⁻⁷ H m⁻¹)</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">N</td><td>Number of turns in the coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current flowing through the coil</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">r</td><td>Radius of the circular coil</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<hr />
 
-    <div class="eq-card">
-      <div class="eq-title">Magnetic Field Inside a Solenoid</div>
-      <div class="eq-formula">B = μ₀nI</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">B</td><td>Magnetic flux density inside the solenoid (uniform near centre)</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">μ₀</td><td>Permeability of free space (= 4π × 10⁻⁷ H m⁻¹)</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
-          <tr><td class="sym">n</td><td>Number of turns per unit length (= N/L)</td><td class="unit">m⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current through the solenoid</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     22  ELECTROMAGNETIC INDUCTION
+════════════════════════════════════════════════ -->
+<section class="topic" id="emi">
+  <div class="topic-header">
+    <span class="topic-num">22</span>
+    <h2>Electromagnetic Induction</h2>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Hall Voltage</div>
-      <div class="eq-formula">V_H = BI / (ntq)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V_H</td><td>Hall voltage across the width of the sample</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">B</td><td>Magnetic flux density applied perpendicular to the current</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">I</td><td>Current through the sample</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">n</td><td>Number density of charge carriers in the sample</td><td class="unit">m⁻³</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">t</td><td>Thickness of the sample (in the direction of <b>B</b>)</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">q</td><td>Charge per carrier</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="eq-card">
+    <div class="eq-name">Magnetic Flux</div>
+    <div class="eq-math">\[ \Phi = BA\cos\theta \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(\Phi\)</td><td>Magnetic flux through a surface</td><td class="unit">Wb (T m²)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(A\)</td><td>Area of the surface</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\theta\)</td><td>Angle between \(\mathbf{B}\) and the normal to the surface</td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Maximum flux \((\Phi=BA)\) when \(\mathbf{B}\) is perpendicular to the surface \((\theta=0°)\); zero flux when \(\mathbf{B}\) is parallel \((\theta=90°)\).</div>
+  </div>
 
-  <hr />
+  <div class="eq-card">
+    <div class="eq-name">Magnetic Flux Linkage</div>
+    <div class="eq-math">\[ N\Phi = NBA\cos\theta \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(N\Phi\)</td><td>Total magnetic flux linkage through the coil</td><td class="unit">Wb</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(N\)</td><td>Number of turns in the coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\Phi\)</td><td>Magnetic flux through one turn</td><td class="unit">Wb</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(A\)</td><td>Cross-sectional area of one turn</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\theta\)</td><td>Angle between \(\mathbf{B}\) and the normal to the coil plane</td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       6. ELECTROMAGNETIC INDUCTION
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="emi">
-    <div class="topic-header">
-      <span class="topic-num">22</span>
-      <h2>Electromagnetic Induction</h2>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Faraday's Law of Electromagnetic Induction</div>
+    <div class="eq-math">\[ \varepsilon = -\frac{d(N\Phi)}{dt} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(\varepsilon\)</td><td>Induced EMF</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(N\Phi\)</td><td>Magnetic flux linkage</td><td class="unit">Wb</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(t\)</td><td>Time</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">The negative sign encodes Lenz's Law: the induced EMF opposes the change in flux that caused it — a consequence of energy conservation.</div>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Magnetic Flux</div>
-      <div class="eq-formula">Φ = BA cosθ</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">Φ</td><td>Magnetic flux through a surface</td><td class="unit">Wb (T m²)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">B</td><td>Magnetic flux density</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">A</td><td>Area of the surface</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">θ</td><td>Angle between <b>B</b> and the normal to the surface</td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Maximum flux (Φ = BA) when <b>B</b> is perpendicular to the surface (θ = 0°). Zero flux when <b>B</b> is parallel to the surface (θ = 90°).</div>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">EMF of a Rotating Coil</div>
+    <div class="eq-math">\[ \varepsilon = NBA\omega\sin(\omega t) = \varepsilon_0\sin(\omega t) \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(\varepsilon\)</td><td>Instantaneous induced EMF</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Peak (maximum) EMF \(= NBA\omega\)</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(N\)</td><td>Number of turns in the coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(B\)</td><td>Magnetic flux density of the uniform external field</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(A\)</td><td>Area of the coil</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(\omega\)</td><td>Angular frequency of rotation</td><td class="unit">rad s⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(t\)</td><td>Time (\(t=0\) when coil plane is perpendicular to \(\mathbf{B}\))</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <div class="eq-card">
-      <div class="eq-title">Magnetic Flux Linkage</div>
-      <div class="eq-formula">NΦ = NBA cosθ</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">NΦ</td><td>Total magnetic flux linkage through a coil of N turns</td><td class="unit">Wb (or T m²)</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">N</td><td>Number of turns in the coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">Φ</td><td>Magnetic flux through one turn</td><td class="unit">Wb</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">B</td><td>Magnetic flux density</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">A</td><td>Cross-sectional area of the coil</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">θ</td><td>Angle between <b>B</b> and the normal to the coil plane</td><td class="unit">° or rad</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+<hr />
 
-    <div class="eq-card">
-      <div class="eq-title">Faraday's Law of Electromagnetic Induction</div>
-      <div class="eq-formula">ε = −d(NΦ) / dt</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">ε</td><td>Induced EMF</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">NΦ</td><td>Magnetic flux linkage</td><td class="unit">Wb</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">t</td><td>Time</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">The negative sign (Lenz's Law): the induced EMF opposes the change in flux that caused it — a statement of energy conservation.</div>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     23  ALTERNATING CURRENTS
+════════════════════════════════════════════════ -->
+<section class="topic" id="ac">
+  <div class="topic-header">
+    <span class="topic-num">23</span>
+    <h2>Alternating Currents</h2>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">EMF of a Rotating Coil</div>
-      <div class="eq-formula">ε = NBAω sin(ωt) = ε₀ sin(ωt)</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">ε</td><td>Instantaneous EMF induced in the rotating coil</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ε₀</td><td>Peak (maximum) EMF = NBAω</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">N</td><td>Number of turns in the coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">B</td><td>Magnetic flux density of the uniform field</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-          <tr><td class="sym">A</td><td>Area of the coil</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">ω</td><td>Angular frequency of rotation of the coil</td><td class="unit">rad s⁻¹</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">t</td><td>Time (t = 0 when coil plane is perpendicular to <b>B</b>)</td><td class="unit">s</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="eq-card">
+    <div class="eq-name">RMS Voltage</div>
+    <div class="eq-math">\[ V_{\text{rms}} = \frac{V_0}{\sqrt{2}} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V_{\text{rms}}\)</td><td>Root-mean-square voltage — equivalent d.c. voltage for same power dissipation</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_0\)</td><td>Peak (amplitude) voltage of the sinusoidal waveform</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Valid only for a sinusoidal waveform. For other waveforms \(V_{\text{rms}}\) must be calculated from first principles.</div>
+  </div>
 
-  <hr />
+  <div class="eq-card">
+    <div class="eq-name">RMS Current</div>
+    <div class="eq-math">\[ I_{\text{rms}} = \frac{I_0}{\sqrt{2}} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(I_{\text{rms}}\)</td><td>Root-mean-square current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_0\)</td><td>Peak (amplitude) current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       7. ALTERNATING CURRENTS
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="topic" id="ac">
-    <div class="topic-header">
-      <span class="topic-num">23</span>
-      <h2>Alternating Currents</h2>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Mean Power in an A.C. Circuit</div>
+    <div class="eq-math">\[ P = V_{\text{rms}}\,I_{\text{rms}} = \tfrac{1}{2}V_0 I_0 \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(P\)</td><td>Mean (average) power dissipated over one complete cycle</td><td class="unit">W</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_{\text{rms}}\)</td><td>RMS voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_{\text{rms}}\)</td><td>RMS current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_0\)</td><td>Peak voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_0\)</td><td>Peak current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">RMS Voltage</div>
-      <div class="eq-formula">V_rms = V₀ / √2</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V_rms</td><td>Root-mean-square voltage — equivalent d.c. voltage for same power</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V₀</td><td>Peak (amplitude) voltage of the sinusoidal waveform</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Valid only for a sinusoidal waveform. For other waveforms, V_rms must be calculated from first principles.</div>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Transformer Turns Ratio</div>
+    <div class="eq-math">\[ \frac{V_s}{V_p} = \frac{N_s}{N_p} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V_s\)</td><td>Voltage across the secondary coil</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_p\)</td><td>Voltage across the primary coil</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(N_s\)</td><td>Number of turns in the secondary coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(N_p\)</td><td>Number of turns in the primary coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">RMS Current</div>
-      <div class="eq-formula">I_rms = I₀ / √2</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">I_rms</td><td>Root-mean-square current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I₀</td><td>Peak (amplitude) current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="eq-card">
+    <div class="eq-name">Ideal Transformer — Power Conservation</div>
+    <div class="eq-math">\[ V_p I_p = V_s I_s \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(V_p\)</td><td>Primary voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_p\)</td><td>Primary current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(V_s\)</td><td>Secondary voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(I_s\)</td><td>Secondary current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">Valid for an ideal (100% efficient) transformer. A step-up in voltage \((N_s > N_p)\) gives a step-down in current, conserving power.</div>
+  </div>
 
-    <div class="eq-card">
-      <div class="eq-title">Mean Power in an A.C. Circuit</div>
-      <div class="eq-formula">P = V_rms I_rms = ½ V₀ I₀</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">P</td><td>Mean (average) power dissipated over a complete cycle</td><td class="unit">W</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V_rms</td><td>RMS voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I_rms</td><td>RMS current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V₀</td><td>Peak voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I₀</td><td>Peak current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+</section>
 
-    <div class="eq-card">
-      <div class="eq-title">Transformer Turns Ratio</div>
-      <div class="eq-formula">V_s / V_p = N_s / N_p</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V_s</td><td>Voltage across the secondary coil</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V_p</td><td>Voltage across the primary coil</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">N_s</td><td>Number of turns in the secondary coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">N_p</td><td>Number of turns in the primary coil</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="eq-card">
-      <div class="eq-title">Ideal Transformer — Power Conservation</div>
-      <div class="eq-formula">V_p I_p = V_s I_s</div>
-      <table class="var-table">
-        <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td class="sym">V_p</td><td>Primary voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I_p</td><td>Primary current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">V_s</td><td>Secondary voltage</td><td class="unit">V</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-          <tr><td class="sym">I_s</td><td>Secondary current</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        </tbody>
-      </table>
-      <div class="note">Valid for an ideal (100% efficient) transformer only. A step-up in voltage corresponds to a step-down in current, so power is conserved.</div>
-    </div>
-
-  </section>
-
-  <footer style="text-align:center; color:var(--muted); font-size:.8rem; margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--border);">
-    A-level H2 Physics (9749) &nbsp;·&nbsp; Electricity &amp; Magnetism &nbsp;·&nbsp; All equations, variables, units and scalar/vector classifications
-  </footer>
+<footer>
+  A-level H2 Physics (9749) &nbsp;·&nbsp; Electricity &amp; Magnetism &nbsp;·&nbsp; All equations rendered with MathJax
+</footer>
 
 </div>
 </body>
