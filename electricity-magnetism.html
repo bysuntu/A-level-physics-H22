@@ -24,18 +24,18 @@
 
   <style>
     :root {
-      --bg:      #0f1117;
-      --surface: #1a1d27;
-      --card:    #21253a;
-      --border:  #2e3350;
-      --accent:  #5b8cff;
-      --accent2: #a78bfa;
-      --green:   #34d399;
-      --yellow:  #fbbf24;
-      --red:     #f87171;
-      --text:    #e2e8f0;
-      --muted:   #94a3b8;
-      --eq-bg:   #12162b;
+      --bg:      #ffffff;
+      --surface: #f8f9fa;
+      --card:    #ffffff;
+      --border:  #dee2e6;
+      --accent:  #2563eb;
+      --accent2: #7c3aed;
+      --green:   #059669;
+      --yellow:  #b45309;
+      --red:     #dc2626;
+      --text:    #1e293b;
+      --muted:   #64748b;
+      --eq-bg:   #f1f5f9;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -63,22 +63,40 @@
     }
     .legend-item { display: flex; align-items: center; gap: .45rem; }
 
-    /* ── Table of Contents ── */
-    .toc {
+    /* ── Tab Navigation ── */
+    .tab-bar {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: .6rem;
+    }
+    .tab-btn {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.2rem 1.8rem;
-      margin-bottom: 3rem;
+      border-radius: 8px 8px 0 0;
+      padding: .55rem 1.1rem;
+      font-size: .88rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s;
+      font-family: inherit;
     }
-    .toc h2 {
-      font-size: .8rem; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 1px; margin-bottom: .8rem;
+    .tab-btn:hover {
+      background: var(--card);
+      color: var(--text);
     }
-    .toc ol { padding-left: 1.4rem; }
-    .toc li { margin: .3rem 0; }
-    .toc a  { color: var(--accent); text-decoration: none; font-size: .95rem; }
-    .toc a:hover { text-decoration: underline; }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Hide all topic sections by default; show the active one */
+    .topic { display: none; margin-bottom: 3.5rem; }
+    .topic.active { display: block; }
+
+    /* Hide the <hr> separators between sections */
+    .page > hr { display: none; }
 
     /* ── Topic section ── */
     .topic { margin-bottom: 3.5rem; }
@@ -100,6 +118,7 @@
       border-radius: 10px;
       margin-bottom: 1.3rem;
       overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
     .eq-name {
       background: var(--eq-bg);
@@ -122,7 +141,7 @@
     .eq-math-alt {
       padding: .2rem 1.6rem .7rem;
       font-size: 1rem;
-      color: #c4b5fd;
+      color: var(--accent2);
       text-align: center;
       border-bottom: 1px solid var(--border);
       overflow-x: auto;
@@ -131,7 +150,7 @@
     /* ── Variable table ── */
     .var-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
     .var-table th {
-      background: #1e2235; color: var(--muted);
+      background: #f1f5f9; color: var(--muted);
       text-transform: uppercase; font-size: .72rem;
       letter-spacing: .8px; padding: .55rem 1rem; text-align: left;
     }
@@ -140,20 +159,43 @@
       border-top: 1px solid var(--border);
       vertical-align: middle;
     }
-    .var-table tr:hover td { background: rgba(255,255,255,.03); }
+    .var-table tr:hover td { background: rgba(0,0,0,.03); }
     .sym  { color: var(--green); font-weight: 600; }
     .unit { font-family: 'Courier New', monospace; color: var(--accent2); white-space: nowrap; }
     .badge {
       display: inline-block; font-size: .68rem; font-weight: 700;
       padding: .15rem .5rem; border-radius: 4px; letter-spacing: .5px;
     }
-    .badge-v { background: #3b1f2b; color: var(--red); }
-    .badge-s { background: #1a2e1f; color: var(--green); }
-    .badge-c { background: #1e2235; color: var(--muted); }
+    .badge-v { background: #fef2f2; color: var(--red); }
+    .badge-s { background: #ecfdf5; color: var(--green); }
+    .badge-c { background: #f1f5f9; color: var(--muted); }
+
+    /* ── Plot ── */
+    .eq-plot {
+      padding: 1rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--eq-bg);
+    }
+    .eq-plot canvas {
+      width: 100%;
+      height: 220px;
+      display: block;
+      border-radius: 6px;
+    }
+    .eq-plot-legend {
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+      margin-top: .5rem; font-size: .78rem; color: var(--muted);
+    }
+    .eq-plot-legend span {
+      display: flex; align-items: center; gap: .35rem;
+    }
+    .eq-plot-legend .swatch {
+      width: 14px; height: 3px; border-radius: 2px; display: inline-block;
+    }
 
     /* ── Note ── */
     .note {
-      background: #1a2332;
+      background: #eff6ff;
       border-left: 3px solid var(--accent);
       padding: .6rem 1.1rem;
       font-size: .87rem; color: var(--muted);
@@ -161,7 +203,224 @@
       border-radius: 0 6px 6px 0;
     }
 
+    /* ── Derivation figure ── */
+    .derivation-fig {
+      text-align: center;
+      margin: .5rem 0 .8rem;
+    }
+    .derivation-fig svg {
+      max-width: 400px;
+      width: 100%;
+      height: auto;
+    }
+
+    /* ── Derivation ── */
+    .derivation {
+      padding: .8rem 1.3rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .9rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+    .derivation-title {
+      font-size: .75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .8px;
+      color: var(--accent); margin-bottom: .5rem;
+    }
+    .derivation ol {
+      padding-left: 1.4rem;
+      color: var(--text);
+    }
+    .derivation ol li {
+      margin-bottom: .4rem;
+    }
+    .derivation .step-math {
+      display: block;
+      text-align: center;
+      margin: .4rem 0;
+      color: var(--yellow);
+      font-size: 1.05rem;
+    }
+
+    /* ── Exam Tips ── */
+    .tip-group { margin-bottom: 2rem; }
+    .tip-group-title {
+      font-size: .95rem; font-weight: 700; color: var(--accent);
+      margin-bottom: .6rem; padding-bottom: .35rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .tip-list { list-style: none; padding: 0; }
+    .tip-list li {
+      position: relative;
+      padding: .45rem 0 .45rem 1.4rem;
+      font-size: .9rem;
+      line-height: 1.6;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .tip-list li:last-child { border-bottom: none; }
+    .tip-list li::before {
+      content: '\25B8';
+      position: absolute; left: 0; color: var(--accent);
+      font-size: .8rem; top: .5rem;
+    }
+    .tip-list .tip-warn {
+      color: var(--red); font-weight: 600; font-size: .78rem;
+      text-transform: uppercase; letter-spacing: .4px;
+    }
+    .tip-list .tip-key {
+      color: var(--green); font-weight: 600;
+    }
+    .tip-list code {
+      background: #f1f5f9; padding: .1rem .35rem; border-radius: 3px;
+      font-size: .85em; color: var(--accent2);
+    }
+
+    /* ── Practice Questions ── */
+    .q-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 1.3rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .q-header {
+      display: flex; align-items: center; gap: .7rem;
+      background: var(--eq-bg);
+      padding: .55rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .q-num {
+      background: var(--accent); color: #fff;
+      font-weight: 700; font-size: .72rem;
+      padding: .18rem .55rem; border-radius: 5px;
+      min-width: 1.6rem; text-align: center;
+    }
+    .q-topic {
+      font-size: .72rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .6px;
+    }
+    .q-marks {
+      margin-left: auto;
+      font-size: .72rem; font-weight: 700; color: var(--accent2);
+      background: #f5f3ff; padding: .15rem .5rem; border-radius: 4px;
+    }
+    .q-body {
+      padding: .9rem 1.3rem;
+      font-size: .92rem; line-height: 1.7;
+    }
+    .q-body ol { padding-left: 1.4rem; }
+    .q-body ol li { margin-bottom: .3rem; }
+    .q-answer {
+      border-top: 1px solid var(--border);
+      background: var(--eq-bg);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease, padding .3s ease;
+    }
+    .q-answer.open {
+      max-height: 600px;
+      padding: .8rem 1.3rem;
+    }
+    .q-answer-inner {
+      font-size: .88rem; line-height: 1.7; color: var(--text);
+    }
+    .q-toggle {
+      display: inline-block;
+      margin-top: .5rem;
+      font-size: .8rem; font-weight: 600;
+      color: var(--accent); cursor: pointer;
+      border: 1px solid var(--accent); border-radius: 5px;
+      padding: .25rem .7rem;
+      background: none;
+      font-family: inherit;
+      transition: background .2s, color .2s;
+    }
+    .q-toggle:hover { background: var(--accent); color: #fff; }
+
     hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    /* ── Floating Data Booklet ── */
+    .formula-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      width: 370px;
+      max-height: 80vh;
+      display: none;            /* shown only on Practice tab */
+      flex-direction: column;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: .82rem;
+      transition: box-shadow .3s;
+    }
+    .formula-float:hover { box-shadow: 0 10px 40px rgba(0,0,0,.24); }
+    .formula-float-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 12px 12px 0 0;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 700;
+      font-size: .88rem;
+      letter-spacing: .3px;
+    }
+    .formula-float.folded .formula-float-hdr { border-radius: 12px; }
+    .formula-float-hdr .ff-arrow {
+      transition: transform .3s;
+      font-size: 1.1rem;
+    }
+    .formula-float.folded .ff-arrow { transform: rotate(180deg); }
+    .formula-float-body {
+      overflow-y: auto;
+      padding: .6rem .9rem 1rem;
+      max-height: calc(80vh - 44px);
+      transition: max-height .35s ease, padding .25s ease;
+    }
+    .formula-float.folded .formula-float-body {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+    }
+    .ff-topic {
+      font-weight: 700;
+      color: var(--accent);
+      margin: .65rem 0 .25rem;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .2rem;
+    }
+    .ff-topic:first-child { margin-top: .1rem; }
+    .ff-row {
+      display: flex;
+      align-items: baseline;
+      gap: .4rem;
+      padding: .18rem 0;
+    }
+    .ff-label {
+      color: var(--muted);
+      font-size: .72rem;
+      min-width: 90px;
+      flex-shrink: 0;
+    }
+    .ff-eq {
+      color: var(--text);
+      font-size: .82rem;
+    }
+    /* scrollbar styling */
+    .formula-float-body::-webkit-scrollbar { width: 5px; }
+    .formula-float-body::-webkit-scrollbar-thumb {
+      background: var(--border); border-radius: 3px;
+    }
 
     footer {
       text-align: center; color: var(--muted);
@@ -186,25 +445,24 @@
   <div class="legend-item"><span class="badge badge-c">CONST</span> physical constant</div>
 </div>
 
-<!-- TOC -->
-<nav class="toc">
-  <h2>Contents</h2>
-  <ol>
-    <li><a href="#ef">Electric Fields</a></li>
-    <li><a href="#cap">Capacitance</a></li>
-    <li><a href="#cur">Current of Electricity</a></li>
-    <li><a href="#dc">D.C. Circuits</a></li>
-    <li><a href="#em">Electromagnetism</a></li>
-    <li><a href="#emi">Electromagnetic Induction</a></li>
-    <li><a href="#ac">Alternating Currents</a></li>
-  </ol>
+<!-- Tab Navigation -->
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="ef">17 &middot; Electric Fields</button>
+  <button class="tab-btn" data-tab="cap">18 &middot; Capacitance</button>
+  <button class="tab-btn" data-tab="cur">19 &middot; Current of Electricity</button>
+  <button class="tab-btn" data-tab="dc">20 &middot; D.C. Circuits</button>
+  <button class="tab-btn" data-tab="em">21 &middot; Electromagnetism</button>
+  <button class="tab-btn" data-tab="emi">22 &middot; EM Induction</button>
+  <button class="tab-btn" data-tab="ac">23 &middot; Alternating Currents</button>
+  <button class="tab-btn" data-tab="pq" style="margin-left:auto; background:#ecfdf5; border-color:#6ee7b7; color:#059669;">Practice</button>
+  <button class="tab-btn" data-tab="tips" style="background:#fef2f2; border-color:#fca5a5; color:#dc2626;">Exam Tips</button>
 </nav>
 
 
 <!-- ═══════════════════════════════════════════════
      17  ELECTRIC FIELDS
 ════════════════════════════════════════════════ -->
-<section class="topic" id="ef">
+<section class="topic active" id="ef">
   <div class="topic-header">
     <span class="topic-num">17</span>
     <h2>Electric Fields</h2>
@@ -219,7 +477,7 @@
       <tbody>
         <tr><td class="sym">\(F\)</td><td>Electrostatic force between two point charges</td><td class="unit">N</td><td><span class="badge badge-v">VECTOR</span></td></tr>
         <tr><td class="sym">\(Q,\; q\)</td><td>Magnitudes of the two point charges</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space \((= 8.85\times10^{-12}\ \text{F\,m}^{-1})\)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space \((= 8.85\times10^{-12}\ \text{F m}^{-1})\)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
         <tr><td class="sym">\(r\)</td><td>Distance between the two charges</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
@@ -332,7 +590,7 @@
       <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
       <tbody>
         <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
-        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space \((= 8.85\times10^{-12}\ \text{F\,m}^{-1})\)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(\varepsilon_0\)</td><td>Permittivity of free space \((= 8.85\times10^{-12}\ \text{F m}^{-1})\)</td><td class="unit">F m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
         <tr><td class="sym">\(\varepsilon_r\)</td><td>Relative permittivity (dielectric constant) of the material between the plates</td><td class="unit">dimensionless</td><td><span class="badge badge-s">SCALAR</span></td></tr>
         <tr><td class="sym">\(A\)</td><td>Overlapping area of the plates</td><td class="unit">m²</td><td><span class="badge badge-s">SCALAR</span></td></tr>
         <tr><td class="sym">\(d\)</td><td>Separation between the plates</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
@@ -396,6 +654,14 @@
         <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
+    <div class="eq-plot">
+      <canvas id="plot-discharge" height="220"></canvas>
+      <div class="eq-plot-legend">
+        <span><span class="swatch" style="background:#d97706"></span> Q/Q&#8320; &amp; V/V&#8320;</span>
+        <span><span class="swatch" style="background:#dc2626"></span> I/I&#8320;</span>
+        <span style="color:#94a3b8">&#x25AA; dashed = &tau; = RC</span>
+      </div>
+    </div>
   </div>
 
   <div class="eq-card">
@@ -414,6 +680,14 @@
         <tr><td class="sym">\(C\)</td><td>Capacitance</td><td class="unit">F</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
+    <div class="eq-plot">
+      <canvas id="plot-charge" height="220"></canvas>
+      <div class="eq-plot-legend">
+        <span><span class="swatch" style="background:#059669"></span> Q/Q&#8320; &amp; V/V&#8320;</span>
+        <span><span class="swatch" style="background:#dc2626"></span> I/I&#8320;</span>
+        <span style="color:#94a3b8">&#x25AA; dashed = &tau; = RC</span>
+      </div>
+    </div>
   </div>
 
   <div class="eq-card">
@@ -658,6 +932,25 @@
     <div class="note">This force is always perpendicular to \(\mathbf{v}\); it does no work and does not change the particle's speed.</div>
   </div>
 
+  <!-- Biot–Savart Law -->
+  <div class="eq-card">
+    <div class="eq-name">Biot–Savart Law</div>
+    <div class="eq-math">\[ d\mathbf{B} = \frac{\mu_0}{4\pi}\,\frac{I\,d\mathbf{l} \times \hat{\mathbf{r}}}{r^2} \]</div>
+    <table class="var-table">
+      <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="sym">\(d\mathbf{B}\)</td><td>Infinitesimal magnetic flux density contribution from a current element</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(\mu_0\)</td><td>Permeability of free space \((= 4\pi\times10^{-7}\ \text{H m}^{-1})\)</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(I\)</td><td>Current through the conductor</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+        <tr><td class="sym">\(d\mathbf{l}\)</td><td>Infinitesimal length element in the direction of current flow</td><td class="unit">m</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(\hat{\mathbf{r}}\)</td><td>Unit vector from the current element to the field point</td><td class="unit">—</td><td><span class="badge badge-v">VECTOR</span></td></tr>
+        <tr><td class="sym">\(r\)</td><td>Distance from the current element to the field point</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">The total field is found by integrating over the entire current-carrying conductor: \(\displaystyle \mathbf{B} = \frac{\mu_0}{4\pi}\int \frac{I\,d\mathbf{l}\times\hat{\mathbf{r}}}{r^2}\). The cross product gives the direction via the right-hand rule.</div>
+  </div>
+
+  <!-- Long Straight Wire — result + derivation -->
   <div class="eq-card">
     <div class="eq-name">Magnetic Field Due to a Long Straight Wire</div>
     <div class="eq-math">\[ B = \frac{\mu_0 I}{2\pi d} \]</div>
@@ -665,14 +958,81 @@
       <thead><tr><th>Symbol</th><th>Definition</th><th>Unit</th><th>Type</th></tr></thead>
       <tbody>
         <tr><td class="sym">\(B\)</td><td>Magnetic flux density at perpendicular distance \(d\) from the wire</td><td class="unit">T</td><td><span class="badge badge-v">VECTOR</span></td></tr>
-        <tr><td class="sym">\(\mu_0\)</td><td>Permeability of free space \((= 4\pi\times10^{-7}\ \text{H\,m}^{-1})\)</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
+        <tr><td class="sym">\(\mu_0\)</td><td>Permeability of free space \((= 4\pi\times10^{-7}\ \text{H m}^{-1})\)</td><td class="unit">H m⁻¹</td><td><span class="badge badge-c">CONST</span></td></tr>
         <tr><td class="sym">\(I\)</td><td>Current in the wire</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
         <tr><td class="sym">\(d\)</td><td>Perpendicular distance from the wire to the field point</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
+    <div class="derivation">
+      <div class="derivation-title">Derivation from Biot–Savart Law</div>
+      <div class="derivation-fig">
+        <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+          <!-- Wire along z-axis -->
+          <line x1="80" y1="20" x2="80" y2="250" stroke="#2563eb" stroke-width="2.5"/>
+          <polygon points="80,20 75,32 85,32" fill="#2563eb"/>
+          <text x="63" y="40" fill="#2563eb" font-size="14" font-weight="600" font-family="serif" font-style="italic">I</text>
+          <text x="72" y="15" fill="#64748b" font-size="12" font-style="italic" font-family="serif">z</text>
+
+          <!-- Current element dl -->
+          <line x1="80" y1="55" x2="80" y2="90" stroke="#059669" stroke-width="5" stroke-linecap="round"/>
+          <polygon points="80,55 76,65 84,65" fill="#059669"/>
+          <text x="46" y="78" fill="#059669" font-size="13" font-weight="600" font-family="serif" font-style="italic">dl</text>
+
+          <!-- Field point P -->
+          <circle cx="330" cy="160" r="4" fill="#dc2626"/>
+          <text x="340" y="164" fill="#dc2626" font-size="13" font-weight="600" font-family="serif" font-style="italic">P</text>
+
+          <!-- Origin on wire at P's level -->
+          <circle cx="80" cy="160" r="2.5" fill="#64748b"/>
+
+          <!-- d — perpendicular distance (horizontal dashed) -->
+          <line x1="86" y1="160" x2="324" y2="160" stroke="#64748b" stroke-width="1" stroke-dasharray="6,4"/>
+          <text x="205" y="178" fill="#64748b" font-size="13" text-anchor="middle" font-family="serif" font-style="italic">d</text>
+
+          <!-- z distance (vertical dashed, left of wire) -->
+          <line x1="67" y1="73" x2="67" y2="160" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="54" y="120" fill="#94a3b8" font-size="12" font-family="serif" font-style="italic">z</text>
+
+          <!-- r from dl to P -->
+          <line x1="80" y1="73" x2="330" y2="160" stroke="#b45309" stroke-width="1.8"/>
+          <text x="215" y="102" fill="#b45309" font-size="13" font-weight="600" font-family="serif" font-style="italic">r</text>
+
+          <!-- Right angle mark at origin -->
+          <polyline points="80,148 92,148 92,160" fill="none" stroke="#64748b" stroke-width="1"/>
+
+          <!-- Angle θ at dl between wire (+z) and line to P -->
+          <path d="M 80,43 A 30,30 0 0,1 108,83" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="113" y="57" fill="#7c3aed" font-size="14" font-style="italic" font-family="serif">&theta;</text>
+
+          <!-- sin θ = d/r annotation -->
+          <text x="270" y="230" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">sin &theta; = d / r</text>
+
+          <!-- dB at P (out of page symbol ⊙) -->
+          <circle cx="330" cy="188" r="7" fill="none" stroke="#7c3aed" stroke-width="1.3"/>
+          <circle cx="330" cy="188" r="2" fill="#7c3aed"/>
+          <text x="342" y="192" fill="#7c3aed" font-size="11" font-weight="600" font-family="sans-serif">dB</text>
+        </svg>
+      </div>
+      <ol>
+        <li>Place the wire along the \(z\)-axis. Consider a small element \(dl\) at position \(z\). The field point P is at perpendicular distance \(d\) from the wire. Let \(\theta\) be the angle between \(d\mathbf{l}\) and \(\hat{\mathbf{r}}\), so \(\sin\theta = d/r\) where \(r = \sqrt{z^2+d^2}\).</li>
+        <li>The Biot–Savart Law gives:
+          <span class="step-math">\[ dB = \frac{\mu_0 I}{4\pi}\,\frac{\sin\theta}{r^2}\,dl \]</span>
+        </li>
+        <li>Express everything in terms of \(\theta\). From the geometry, \(r = d/\sin\theta\) and \(z = -d\cot\theta\), so \(dz = \dfrac{d}{\sin^2\theta}\,d\theta\):
+          <span class="step-math">\[ dB = \frac{\mu_0 I}{4\pi}\,\frac{\sin\theta}{(d/\sin\theta)^2}\,\frac{d}{\sin^2\theta}\,d\theta = \frac{\mu_0 I}{4\pi d}\,\sin\theta\;d\theta \]</span>
+        </li>
+        <li>Integrate from \(\theta = 0\) to \(\theta = \pi\) for an infinitely long wire:
+          <span class="step-math">\[ B = \frac{\mu_0 I}{4\pi d}\int_0^{\pi}\sin\theta\;d\theta = \frac{\mu_0 I}{4\pi d}\Big[-\cos\theta\Big]_0^{\pi} = \frac{\mu_0 I}{4\pi d}\,(2) \]</span>
+        </li>
+        <li>This gives the result:
+          <span class="step-math">\[ \boxed{B = \frac{\mu_0 I}{2\pi d}} \]</span>
+        </li>
+      </ol>
+    </div>
     <div class="note">Direction given by the right-hand grip rule: thumb along current, fingers curl in direction of \(\mathbf{B}\).</div>
   </div>
 
+  <!-- Circular Coil — result + derivation -->
   <div class="eq-card">
     <div class="eq-name">Magnetic Field at the Centre of a Circular Coil</div>
     <div class="eq-math">\[ B = \frac{\mu_0 N I}{2r} \]</div>
@@ -686,6 +1046,61 @@
         <tr><td class="sym">\(r\)</td><td>Radius of the circular coil</td><td class="unit">m</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
+    <div class="derivation">
+      <div class="derivation-title">Derivation from Biot–Savart Law</div>
+      <div class="derivation-fig">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- Loop -->
+          <circle cx="200" cy="155" r="105" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+
+          <!-- Current arrows along loop (counterclockwise) -->
+          <polygon points="305,150 297,141 297,159" fill="#2563eb"/>
+          <polygon points="95,160 103,169 103,151" fill="#2563eb"/>
+          <polygon points="205,260 214,252 196,252" fill="#2563eb"/>
+          <text x="320" y="158" fill="#2563eb" font-size="14" font-weight="600" font-family="serif" font-style="italic">I</text>
+
+          <!-- dl at top of loop -->
+          <line x1="175" y1="50" x2="222" y2="50" stroke="#059669" stroke-width="5" stroke-linecap="round"/>
+          <polygon points="222,50 213,44 213,56" fill="#059669"/>
+          <text x="232" y="44" fill="#059669" font-size="13" font-weight="600" font-family="serif" font-style="italic">dl</text>
+
+          <!-- Centre O -->
+          <circle cx="200" cy="155" r="4" fill="#dc2626"/>
+          <text x="214" y="151" fill="#dc2626" font-size="13" font-weight="600" font-family="serif" font-style="italic">O</text>
+
+          <!-- r from dl to O -->
+          <line x1="200" y1="58" x2="200" y2="148" stroke="#b45309" stroke-width="1.8"/>
+          <polygon points="200,148 195,137 205,137" fill="#b45309"/>
+          <text x="183" y="103" fill="#b45309" font-size="13" font-weight="600" font-family="serif" font-style="italic">r</text>
+
+          <!-- Right angle mark at dl showing dl ⊥ r -->
+          <polyline points="200,62 212,62 212,50" fill="none" stroke="#64748b" stroke-width="1.2"/>
+
+          <!-- dB out of page at O -->
+          <circle cx="200" cy="178" r="8" fill="none" stroke="#7c3aed" stroke-width="1.3"/>
+          <circle cx="200" cy="178" r="2.5" fill="#7c3aed"/>
+          <text x="214" y="183" fill="#7c3aed" font-size="11" font-weight="600" font-family="sans-serif">dB</text>
+
+          <!-- Annotation -->
+          <text x="200" y="290" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">Top-down view &middot; dl &perp; r everywhere &middot; sin 90&deg; = 1</text>
+        </svg>
+      </div>
+      <ol>
+        <li>Consider a single circular loop of radius \(r\) carrying current \(I\). We want the field at the centre (point O). Every current element \(d\mathbf{l}\) lies on the loop, and the vector from \(dl\) to O has magnitude \(r\) and is perpendicular to \(d\mathbf{l}\), so \(\sin\alpha = 1\).</li>
+        <li>Each element contributes:
+          <span class="step-math">\[ dB = \frac{\mu_0 I}{4\pi}\,\frac{dl \cdot \sin 90°}{r^2} = \frac{\mu_0 I}{4\pi r^2}\,dl \]</span>
+        </li>
+        <li>By symmetry, all \(d\mathbf{B}\) contributions point in the same direction (along the axis of the loop). Integrate \(dl\) around the full loop, giving a total path length of \(2\pi r\):
+          <span class="step-math">\[ B = \frac{\mu_0 I}{4\pi r^2}\int_0^{2\pi r} dl = \frac{\mu_0 I}{4\pi r^2}\,(2\pi r) \]</span>
+        </li>
+        <li>Simplify:
+          <span class="step-math">\[ B = \frac{\mu_0 I}{2r} \]</span>
+        </li>
+        <li>For a coil with \(N\) turns, each turn contributes equally, so:
+          <span class="step-math">\[ \boxed{B = \frac{\mu_0 N I}{2r}} \]</span>
+        </li>
+      </ol>
+    </div>
   </div>
 
   <div class="eq-card">
@@ -700,6 +1115,86 @@
         <tr><td class="sym">\(I\)</td><td>Current through the solenoid</td><td class="unit">A</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
+    <div class="derivation">
+      <div class="derivation-title">Derivation from Biot–Savart Law</div>
+      <div class="derivation-fig">
+        <svg viewBox="0 0 450 230" xmlns="http://www.w3.org/2000/svg">
+          <!-- Solenoid body -->
+          <rect x="55" y="45" width="340" height="140" fill="#f1f5f9" stroke="#2563eb" stroke-width="2" rx="3"/>
+
+          <!-- Turn lines -->
+          <g stroke="#2563eb" stroke-width="0.7" opacity="0.3">
+            <line x1="77" y1="45" x2="77" y2="185"/>
+            <line x1="99" y1="45" x2="99" y2="185"/>
+            <line x1="121" y1="45" x2="121" y2="185"/>
+            <line x1="143" y1="45" x2="143" y2="185"/>
+            <line x1="165" y1="45" x2="165" y2="185"/>
+            <line x1="187" y1="45" x2="187" y2="185"/>
+            <line x1="209" y1="45" x2="209" y2="185"/>
+            <line x1="231" y1="45" x2="231" y2="185"/>
+            <line x1="253" y1="45" x2="253" y2="185"/>
+            <line x1="275" y1="45" x2="275" y2="185"/>
+            <line x1="297" y1="45" x2="297" y2="185"/>
+            <line x1="319" y1="45" x2="319" y2="185"/>
+            <line x1="341" y1="45" x2="341" y2="185"/>
+            <line x1="363" y1="45" x2="363" y2="185"/>
+          </g>
+
+          <!-- Highlighted dx strip -->
+          <rect x="297" y="45" width="22" height="140" fill="#059669" opacity="0.2" stroke="#059669" stroke-width="1.5"/>
+          <text x="308" y="36" fill="#059669" font-size="12" text-anchor="middle" font-weight="600" font-style="italic" font-family="serif">dx</text>
+          <text x="308" y="202" fill="#059669" font-size="10" text-anchor="middle" font-family="sans-serif">n dx turns</text>
+
+          <!-- Axis -->
+          <line x1="30" y1="115" x2="430" y2="115" stroke="#64748b" stroke-width="1" stroke-dasharray="6,4"/>
+
+          <!-- Point P at centre -->
+          <circle cx="225" cy="115" r="4" fill="#dc2626"/>
+          <text x="225" y="106" fill="#dc2626" font-size="13" font-weight="600" font-family="serif" text-anchor="middle" font-style="italic">P</text>
+
+          <!-- R from axis to top at strip -->
+          <line x1="322" y1="115" x2="322" y2="48" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="333" y="80" fill="#b45309" font-size="13" font-weight="600" font-family="serif" font-style="italic">R</text>
+
+          <!-- x from P to strip along axis -->
+          <line x1="230" y1="122" x2="295" y2="122" stroke="#64748b" stroke-width="1.5"/>
+          <polygon points="295,122 288,118 288,126" fill="#64748b"/>
+          <text x="262" y="138" fill="#64748b" font-size="13" text-anchor="middle" font-family="serif" font-style="italic">x</text>
+
+          <!-- Line from P to top-edge of strip (for angle phi) -->
+          <line x1="225" y1="115" x2="310" y2="48" stroke="#7c3aed" stroke-width="1" stroke-dasharray="4,3"/>
+
+          <!-- Angle phi at P -->
+          <path d="M 255,115 A 30,30 0 0,0 248,96" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="261" y="99" fill="#7c3aed" font-size="14" font-style="italic" font-family="serif">&phi;</text>
+
+          <!-- Length L annotation -->
+          <line x1="55" y1="218" x2="395" y2="218" stroke="#94a3b8" stroke-width="1"/>
+          <line x1="55" y1="213" x2="55" y2="223" stroke="#94a3b8" stroke-width="1"/>
+          <line x1="395" y1="213" x2="395" y2="223" stroke="#94a3b8" stroke-width="1"/>
+          <text x="225" y="228" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="sans-serif">Side view &middot; solenoid length L</text>
+        </svg>
+      </div>
+      <ol>
+        <li>Model the solenoid as a cylinder of radius \(R\) with \(n\) turns per unit length, each carrying current \(I\). We want the field at point P on the axis.</li>
+        <li>First, the on-axis field of a <strong>single loop</strong> of radius \(R\) at axial distance \(x\) from its centre (from Biot–Savart: every \(dl\) is perpendicular to \(\hat{\mathbf{r}}\), so \(|d\mathbf{l}\times\hat{\mathbf{r}}|=dl\); only the axial component \(dB_z = |dB|\cdot R/\sqrt{R^2+x^2}\) survives by symmetry; integrating \(dl\) around the circumference \(2\pi R\)):
+          <span class="step-math">\[ B_{\text{loop}} = \frac{\mu_0 I R^2}{2(R^2+x^2)^{3/2}} \]</span>
+        </li>
+        <li>A thin strip at position \(x\) from P of width \(dx\) contains \(n\,dx\) turns. Its contribution:
+          <span class="step-math">\[ dB = \frac{\mu_0\, n\, I\, R^2}{2(R^2+x^2)^{3/2}}\,dx \]</span>
+        </li>
+        <li>Substitute \(x = R\tan\varphi\), giving \(dx = R\sec^2\!\varphi\;d\varphi\) and \((R^2+x^2)^{3/2} = R^3\sec^3\!\varphi\):
+          <span class="step-math">\[ dB = \frac{\mu_0\, n\, I}{2}\,\cos\varphi\;d\varphi \]</span>
+        </li>
+        <li>For an infinitely long solenoid, \(\varphi\) ranges from \(-\pi/2\) to \(\pi/2\):
+          <span class="step-math">\[ B = \frac{\mu_0 n I}{2}\int_{-\pi/2}^{\pi/2}\cos\varphi\;d\varphi = \frac{\mu_0 n I}{2}\Big[\sin\varphi\Big]_{-\pi/2}^{\;\pi/2} = \frac{\mu_0 n I}{2}\,(2) \]</span>
+        </li>
+        <li>This gives the result:
+          <span class="step-math">\[ \boxed{B = \mu_0\, n\, I} \]</span>
+        </li>
+      </ol>
+    </div>
+    <div class="note">The field is uniform and parallel to the axis everywhere inside an ideal (infinite) solenoid, and zero outside — a consequence of the symmetry and superposition.</div>
   </div>
 
   <div class="eq-card">
@@ -716,6 +1211,91 @@
         <tr><td class="sym">\(q\)</td><td>Charge per carrier</td><td class="unit">C</td><td><span class="badge badge-s">SCALAR</span></td></tr>
       </tbody>
     </table>
+    <div class="derivation">
+      <div class="derivation-fig" style="max-width:440px; margin:0 auto;">
+        <svg viewBox="0 0 450 225" xmlns="http://www.w3.org/2000/svg">
+          <!-- Flat horizontal thin plate (semiconductor wafer) -->
+          <!-- Top face (large visible surface) -->
+          <polygon points="60,148 350,148 390,105 100,105" fill="#eef2f7" stroke="#2563eb" stroke-width="2"/>
+          <!-- Front face (thin strip showing thickness t) -->
+          <polygon points="60,148 350,148 350,162 60,162" fill="#d1d9e6" stroke="#2563eb" stroke-width="1.5"/>
+          <!-- Right face (thin) -->
+          <polygon points="350,148 390,105 390,119 350,162" fill="#cbd5e1" stroke="#2563eb" stroke-width="1.5"/>
+
+          <!-- B arrow pointing straight down into plate -->
+          <line x1="235" y1="18" x2="235" y2="72" stroke="#7c3aed" stroke-width="2.5"/>
+          <polygon points="235,72 230,62 240,62" fill="#7c3aed"/>
+          <text x="248" y="28" fill="#7c3aed" font-size="14" font-weight="600" font-family="serif" font-style="italic">B</text>
+
+          <!-- B × symbols on top face -->
+          <g font-size="14" fill="#7c3aed" text-anchor="middle" opacity="0.3">
+            <text x="155" y="118">×</text>
+            <text x="205" y="118">×</text>
+            <text x="255" y="118">×</text>
+            <text x="305" y="118">×</text>
+            <text x="175" y="140">×</text>
+            <text x="225" y="140">×</text>
+            <text x="275" y="140">×</text>
+          </g>
+
+          <!-- t bracket on left edge of front face -->
+          <line x1="46" y1="148" x2="46" y2="162" stroke="#7c3aed" stroke-width="1.2"/>
+          <line x1="41" y1="148" x2="51" y2="148" stroke="#7c3aed" stroke-width="1.2"/>
+          <line x1="41" y1="162" x2="51" y2="162" stroke="#7c3aed" stroke-width="1.2"/>
+          <text x="33" y="159" fill="#7c3aed" font-size="11" font-weight="600" font-family="serif" text-anchor="middle" font-style="italic">t</text>
+
+          <!-- Current I entering left -->
+          <line x1="12" y1="127" x2="68" y2="127" stroke="#059669" stroke-width="2.5"/>
+          <polygon points="68,127 58,121 58,133" fill="#059669"/>
+          <text x="22" y="118" fill="#059669" font-size="14" font-weight="600" font-family="serif" font-style="italic">I</text>
+
+          <!-- Current I exiting right -->
+          <line x1="395" y1="127" x2="438" y2="127" stroke="#059669" stroke-width="2.5"/>
+          <polygon points="438,127 428,121 428,133" fill="#059669"/>
+
+          <!-- Electron drifting left on top face -->
+          <circle cx="240" cy="128" r="8" fill="none" stroke="#dc2626" stroke-width="1.3"/>
+          <text x="240" y="132" fill="#dc2626" font-size="12" text-anchor="middle" font-weight="700">&#x2212;</text>
+          <line x1="229" y1="128" x2="208" y2="128" stroke="#dc2626" stroke-width="1.5"/>
+          <polygon points="208,128 216,124 216,132" fill="#dc2626"/>
+          <text x="218" y="143" fill="#dc2626" font-size="11" font-family="serif" font-style="italic">v</text>
+
+          <!-- F_B on electron (toward back edge = up on screen) -->
+          <line x1="243" y1="122" x2="255" y2="106" stroke="#b45309" stroke-width="2.5"/>
+          <polygon points="255,106 247,108 252,115" fill="#b45309"/>
+          <text x="262" y="104" fill="#b45309" font-size="11" font-weight="700" font-family="serif">F<tspan font-size="7" dy="3">B</tspan></text>
+
+          <!-- − charges along back edge (electrons accumulate here) -->
+          <g font-size="13" font-weight="700" text-anchor="middle" fill="#dc2626">
+            <text x="140" y="102">&#x2212;</text>
+            <text x="190" y="102">&#x2212;</text>
+            <text x="240" y="102">&#x2212;</text>
+            <text x="290" y="102">&#x2212;</text>
+            <text x="340" y="102">&#x2212;</text>
+          </g>
+
+          <!-- + charges along front edge -->
+          <g font-size="13" font-weight="700" text-anchor="middle" fill="#059669">
+            <text x="100" y="159">+</text>
+            <text x="155" y="159">+</text>
+            <text x="210" y="159">+</text>
+            <text x="265" y="159">+</text>
+            <text x="320" y="159">+</text>
+          </g>
+
+          <!-- V_H bracket on the right side (front edge to back edge) -->
+          <line x1="400" y1="108" x2="362" y2="150" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="396" y1="105" x2="404" y2="111" stroke="#b45309" stroke-width="1.5"/>
+          <line x1="358" y1="147" x2="366" y2="153" stroke="#b45309" stroke-width="1.5"/>
+          <text x="408" y="134" fill="#b45309" font-size="12" font-weight="600" font-family="serif" font-style="italic">V<tspan font-size="8" dy="3">H</tspan></text>
+
+          <!-- Annotation -->
+          <text x="225" y="190" fill="#94a3b8" font-size="10.5" text-anchor="middle" font-family="sans-serif">B downward through plate (along thickness t)</text>
+          <text x="225" y="206" fill="#94a3b8" font-size="10.5" text-anchor="middle" font-family="sans-serif">Magnetic force deflects carriers &#x2192; charge separation &#x2192; V<tspan font-size="7" dy="2">H</tspan></text>
+        </svg>
+      </div>
+    </div>
+    <div class="note">At equilibrium the transverse electric force balances the magnetic force: \(qE_H = qvB\). With \(I = n(wt)vq\) where \(w\) is the width across which \(V_H\) is measured, solving gives \(V_H = BI/(ntq)\) — independent of \(w\).</div>
   </div>
 </section>
 
@@ -875,10 +1455,619 @@
 
 </section>
 
+<!-- ═══════════════════════════════════════════════
+     PRACTICE QUESTIONS
+════════════════════════════════════════════════ -->
+<section class="topic" id="pq">
+  <div class="topic-header">
+    <span class="topic-num" style="background:#059669;">Q</span>
+    <h2>Practice Questions</h2>
+  </div>
+
+  <!-- Q1 — Electric Fields -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">1</span>
+      <span class="q-topic">Electric Fields</span>
+      <span class="q-marks">[6]</span>
+    </div>
+    <div class="q-body">
+      <p>Two point charges \(Q_1 = +3.0\;\mu\text{C}\) and \(Q_2 = -5.0\;\mu\text{C}\) are separated by \(0.40\;\text{m}\) in a vacuum.</p>
+      <ol type="a">
+        <li>Calculate the electrostatic force between the two charges. State whether it is attractive or repulsive. [2]</li>
+        <li>Determine the electric field strength at the midpoint between the two charges. [2]</li>
+        <li>Find the point along the line joining the two charges where the electric potential is zero. [2]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(F = \dfrac{Qq}{4\pi\varepsilon_0 r^2} = \dfrac{(3.0\times10^{-6})(5.0\times10^{-6})}{4\pi(8.85\times10^{-12})(0.40)^2} = 0.84\;\text{N}\)</p>
+        <p>Charges are unlike, so the force is <strong>attractive</strong>.</p>
+        <p><strong>(b)</strong> At the midpoint (\(r = 0.20\;\text{m}\) from each), both fields point from \(Q_1\) toward \(Q_2\) (same direction):</p>
+        <p>\(E = \dfrac{Q_1}{4\pi\varepsilon_0 r^2} + \dfrac{|Q_2|}{4\pi\varepsilon_0 r^2} = \dfrac{(3.0+5.0)\times10^{-6}}{4\pi(8.85\times10^{-12})(0.20)^2} = 1.8\times10^{6}\;\text{V m}^{-1}\)</p>
+        <p><strong>(c)</strong> Let the zero-potential point be at distance \(x\) from \(Q_1\) (between the charges). \(V = 0\) when:</p>
+        <p>\(\dfrac{Q_1}{x} + \dfrac{Q_2}{0.40 - x} = 0 \implies \dfrac{3.0}{x} = \dfrac{5.0}{0.40 - x}\)</p>
+        <p>\(x = 0.15\;\text{m}\) from \(Q_1\).</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q2 — Capacitance -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">2</span>
+      <span class="q-topic">Capacitance</span>
+      <span class="q-marks">[6]</span>
+    </div>
+    <div class="q-body">
+      <p>A \(220\;\mu\text{F}\) capacitor is charged to \(12\;\text{V}\) and then discharged through a \(47\;\text{k}\Omega\) resistor.</p>
+      <ol type="a">
+        <li>Calculate the time constant \(\tau\) of the circuit. [1]</li>
+        <li>Determine the initial charge stored and the initial discharge current. [2]</li>
+        <li>Calculate the voltage across the capacitor after \(15\;\text{s}\). [2]</li>
+        <li>Sketch the voltage–time graph for the discharge, labelling the time constant. [1]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(\tau = RC = 47\times10^3 \times 220\times10^{-6} = 10.3\;\text{s}\)</p>
+        <p><strong>(b)</strong> \(Q_0 = CV_0 = 220\times10^{-6}\times 12 = 2.64\times10^{-3}\;\text{C}\) (2.64 mC)</p>
+        <p>\(I_0 = V_0/R = 12\;/\;47\times10^3 = 2.55\times10^{-4}\;\text{A}\) (0.255 mA)</p>
+        <p><strong>(c)</strong> \(V = V_0\,e^{-t/RC} = 12\,e^{-15/10.3} = 12\,e^{-1.456} = 12\times 0.233 = 2.8\;\text{V}\)</p>
+        <p><strong>(d)</strong> Exponential decay from 12 V. At \(t = \tau = 10.3\;\text{s}\), \(V = 12/e \approx 4.4\;\text{V}\) (37% of initial). Curve approaches 0 V asymptotically.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q3 — Current of Electricity -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">3</span>
+      <span class="q-topic">Current of Electricity</span>
+      <span class="q-marks">[5]</span>
+    </div>
+    <div class="q-body">
+      <p>A copper wire of cross-sectional area \(1.5\times10^{-6}\;\text{m}^2\) carries a current of \(3.0\;\text{A}\). Copper has a free electron density of \(n = 8.5\times10^{28}\;\text{m}^{-3}\).</p>
+      <ol type="a">
+        <li>Calculate the mean drift velocity of the electrons. [2]</li>
+        <li>A second wire of the same material carries the same current but has half the cross-sectional area. State and explain how the drift velocity compares. [2]</li>
+        <li>Explain why the drift velocity is very small yet the light turns on almost instantly when the switch is closed. [1]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(v = \dfrac{I}{nAq} = \dfrac{3.0}{(8.5\times10^{28})(1.5\times10^{-6})(1.6\times10^{-19})} = 1.47\times10^{-4}\;\text{m s}^{-1}\) (\(\approx 0.15\;\text{mm s}^{-1}\))</p>
+        <p><strong>(b)</strong> The drift velocity <strong>doubles</strong>. From \(I = nAvq\), if \(A\) is halved and \(I\), \(n\), \(q\) are unchanged, \(v\) must double to maintain the same current.</p>
+        <p><strong>(c)</strong> The electric field propagates through the wire at close to the speed of light. All free electrons throughout the wire begin drifting almost simultaneously, so current flows at the light almost instantly — the individual electrons do not need to travel from the switch to the bulb.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q4 — D.C. Circuits -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">4</span>
+      <span class="q-topic">D.C. Circuits</span>
+      <span class="q-marks">[6]</span>
+    </div>
+    <div class="q-body">
+      <p>A battery of EMF \(\varepsilon = 9.0\;\text{V}\) and internal resistance \(r = 0.50\;\Omega\) is connected to two resistors: \(R_1 = 6.0\;\Omega\) and \(R_2 = 3.0\;\Omega\) in parallel.</p>
+      <ol type="a">
+        <li>Calculate the total resistance of the external circuit. [1]</li>
+        <li>Determine the current drawn from the battery. [2]</li>
+        <li>Calculate the terminal potential difference of the battery. [1]</li>
+        <li>Determine the power dissipated in \(R_1\). [2]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(\dfrac{1}{R_{\text{ext}}} = \dfrac{1}{6.0} + \dfrac{1}{3.0} = \dfrac{1}{2.0}\), so \(R_{\text{ext}} = 2.0\;\Omega\)</p>
+        <p><strong>(b)</strong> \(I = \dfrac{\varepsilon}{R_{\text{ext}} + r} = \dfrac{9.0}{2.0 + 0.50} = 3.6\;\text{A}\)</p>
+        <p><strong>(c)</strong> \(V = \varepsilon - Ir = 9.0 - 3.6(0.50) = 7.2\;\text{V}\)</p>
+        <p><strong>(d)</strong> The p.d. across the parallel combination is \(V = 7.2\;\text{V}\).</p>
+        <p>\(P_1 = \dfrac{V^2}{R_1} = \dfrac{7.2^2}{6.0} = 8.6\;\text{W}\)</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q5 — D.C. Circuits (Potential Divider) -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">5</span>
+      <span class="q-topic">D.C. Circuits — Potential Divider</span>
+      <span class="q-marks">[4]</span>
+    </div>
+    <div class="q-body">
+      <p>A potential divider consists of a thermistor (resistance \(R_T\)) in series with a \(4.7\;\text{k}\Omega\) fixed resistor, connected to a \(5.0\;\text{V}\) supply. The output voltage \(V_{\text{out}}\) is taken across the fixed resistor.</p>
+      <ol type="a">
+        <li>Write an expression for \(V_{\text{out}}\) in terms of \(R_T\). [1]</li>
+        <li>When the temperature increases, the resistance of the thermistor decreases. Explain what happens to \(V_{\text{out}}\). [2]</li>
+        <li>At a certain temperature, \(V_{\text{out}} = 3.0\;\text{V}\). Calculate \(R_T\). [1]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(V_{\text{out}} = 5.0 \times \dfrac{4700}{R_T + 4700}\)</p>
+        <p><strong>(b)</strong> As temperature rises, \(R_T\) decreases. The fraction \(\dfrac{4700}{R_T + 4700}\) increases (denominator gets smaller). Therefore \(V_{\text{out}}\) <strong>increases</strong>.</p>
+        <p><strong>(c)</strong> \(3.0 = 5.0 \times \dfrac{4700}{R_T + 4700}\)</p>
+        <p>\(R_T + 4700 = 5.0 \times 4700\;/\;3.0 = 7833\)</p>
+        <p>\(R_T = 3100\;\Omega\) (3.1 k\(\Omega\))</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q6 — Electromagnetism -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">6</span>
+      <span class="q-topic">Electromagnetism</span>
+      <span class="q-marks">[5]</span>
+    </div>
+    <div class="q-body">
+      <p>A proton (\(m = 1.67\times10^{-27}\;\text{kg}\), \(q = 1.6\times10^{-19}\;\text{C}\)) enters a uniform magnetic field of flux density \(B = 0.25\;\text{T}\) at a speed of \(4.0\times10^{6}\;\text{m s}^{-1}\), perpendicular to the field.</p>
+      <ol type="a">
+        <li>Calculate the magnetic force on the proton. [1]</li>
+        <li>Explain why the proton moves in a circular path. [2]</li>
+        <li>Determine the radius of the circular orbit. [2]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(F = Bqv = 0.25 \times 1.6\times10^{-19} \times 4.0\times10^6 = 1.6\times10^{-13}\;\text{N}\)</p>
+        <p><strong>(b)</strong> The magnetic force is always perpendicular to the velocity (from \(\mathbf{F} = q\mathbf{v}\times\mathbf{B}\)). It therefore acts as a centripetal force, continuously changing the direction of the proton without changing its speed, resulting in uniform circular motion.</p>
+        <p><strong>(c)</strong> Set magnetic force = centripetal force:</p>
+        <p>\(Bqv = \dfrac{mv^2}{r}\implies r = \dfrac{mv}{Bq} = \dfrac{1.67\times10^{-27}\times 4.0\times10^6}{0.25\times 1.6\times10^{-19}} = 0.167\;\text{m}\approx 0.17\;\text{m}\)</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q7 — Electromagnetism (Hall Effect) -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">7</span>
+      <span class="q-topic">Electromagnetism — Hall Effect</span>
+      <span class="q-marks">[4]</span>
+    </div>
+    <div class="q-body">
+      <p>A Hall probe made of a semiconductor slice (thickness \(t = 0.80\;\text{mm}\), carrier density \(n = 2.5\times10^{22}\;\text{m}^{-3}\)) carries a current of \(25\;\text{mA}\) and is placed in a magnetic field of \(0.15\;\text{T}\).</p>
+      <ol type="a">
+        <li>Calculate the Hall voltage. [2]</li>
+        <li>Explain why a semiconductor is used rather than a metal for the Hall probe. [2]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(V_H = \dfrac{BI}{ntq} = \dfrac{0.15\times 25\times10^{-3}}{(2.5\times10^{22})(0.80\times10^{-3})(1.6\times10^{-19})} = \dfrac{3.75\times10^{-3}}{3.2\times10^{0}} = 1.17\times10^{-3}\;\text{V}\approx 1.2\;\text{mV}\)</p>
+        <p><strong>(b)</strong> Semiconductors have a much lower charge carrier density \(n\) than metals (\(\sim10^{22}\) vs \(\sim10^{28}\;\text{m}^{-3}\)). Since \(V_H \propto 1/n\), a smaller \(n\) produces a much larger (and more easily measurable) Hall voltage for the same \(B\), \(I\), and \(t\).</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q8 — Electromagnetic Induction -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">8</span>
+      <span class="q-topic">Electromagnetic Induction</span>
+      <span class="q-marks">[6]</span>
+    </div>
+    <div class="q-body">
+      <p>A rectangular coil of \(200\) turns with area \(0.030\;\text{m}^2\) rotates at \(50\;\text{Hz}\) in a uniform magnetic field of \(0.12\;\text{T}\).</p>
+      <ol type="a">
+        <li>Calculate the maximum flux linkage through the coil. [1]</li>
+        <li>Determine the peak EMF induced in the coil. [2]</li>
+        <li>Write an expression for the instantaneous EMF as a function of time. [1]</li>
+        <li>At the instant when the EMF is at its peak value, state the value of the flux linkage through the coil. Explain your answer. [2]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(N\Phi_{\max} = NBA = 200\times 0.12\times 0.030 = 0.72\;\text{Wb}\)</p>
+        <p><strong>(b)</strong> \(\omega = 2\pi f = 2\pi(50) = 100\pi\;\text{rad s}^{-1}\)</p>
+        <p>\(\varepsilon_0 = NBA\omega = 0.72\times 100\pi = 226\;\text{V}\approx 230\;\text{V}\)</p>
+        <p><strong>(c)</strong> \(\varepsilon = 226\sin(100\pi t)\;\text{V}\) &nbsp;(or equivalently \(\varepsilon = NBA\omega\sin(\omega t)\))</p>
+        <p><strong>(d)</strong> The flux linkage is <strong>zero</strong> when the EMF is at its peak. This is because \(\varepsilon = -d(N\Phi)/dt\): the EMF is largest when the flux linkage is changing most rapidly, which occurs as \(N\Phi\) passes through zero (the coil plane is parallel to \(\mathbf{B}\)).</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q9 — Electromagnetic Induction (Faraday) -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">9</span>
+      <span class="q-topic">Electromagnetic Induction — Faraday &amp; Lenz</span>
+      <span class="q-marks">[4]</span>
+    </div>
+    <div class="q-body">
+      <p>A straight conductor of length \(0.30\;\text{m}\) moves at a constant velocity of \(5.0\;\text{m s}^{-1}\) perpendicular to a uniform magnetic field of \(0.40\;\text{T}\).</p>
+      <ol type="a">
+        <li>Calculate the EMF induced across the ends of the conductor. [1]</li>
+        <li>The conductor is part of a closed circuit of total resistance \(0.60\;\Omega\). Calculate the current and the force required to maintain the constant velocity. [2]</li>
+        <li>Using Lenz's law, explain why a force is needed to maintain the velocity. [1]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(\varepsilon = BLv = 0.40\times 0.30\times 5.0 = 0.60\;\text{V}\)</p>
+        <p><strong>(b)</strong> \(I = \varepsilon/R = 0.60\;/\;0.60 = 1.0\;\text{A}\)</p>
+        <p>Force on the current-carrying conductor in the field: \(F = BIL = 0.40\times 1.0\times 0.30 = 0.12\;\text{N}\)</p>
+        <p><strong>(c)</strong> By Lenz's law, the induced current flows in a direction that creates a magnetic force opposing the motion of the conductor. This opposing force would decelerate the conductor, so an external force of equal magnitude is needed to maintain constant velocity — this is a consequence of conservation of energy.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Q10 — Alternating Currents -->
+  <div class="q-card">
+    <div class="q-header">
+      <span class="q-num">10</span>
+      <span class="q-topic">Alternating Currents — Transformer</span>
+      <span class="q-marks">[5]</span>
+    </div>
+    <div class="q-body">
+      <p>An ideal transformer has 400 turns in the primary coil and 2000 turns in the secondary coil. The primary is connected to a \(230\;\text{V}_{\text{rms}}\) a.c. supply. A \(5.0\;\text{k}\Omega\) resistor is connected across the secondary.</p>
+      <ol type="a">
+        <li>Calculate the secondary voltage. [1]</li>
+        <li>Calculate the current in the secondary coil and the power dissipated in the resistor. [2]</li>
+        <li>Determine the current in the primary coil. [1]</li>
+        <li>State one reason why a real transformer is less than 100% efficient. [1]</li>
+      </ol>
+      <button class="q-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Show Answer</button>
+      <div class="q-answer"><div class="q-answer-inner">
+        <p><strong>(a)</strong> \(\dfrac{V_s}{V_p} = \dfrac{N_s}{N_p}\implies V_s = 230\times\dfrac{2000}{400} = 1150\;\text{V}\)</p>
+        <p><strong>(b)</strong> \(I_s = \dfrac{V_s}{R} = \dfrac{1150}{5000} = 0.23\;\text{A}\)</p>
+        <p>\(P = V_s I_s = 1150\times 0.23 = 265\;\text{W}\)</p>
+        <p><strong>(c)</strong> For an ideal transformer, \(V_p I_p = V_s I_s\):</p>
+        <p>\(I_p = \dfrac{V_s I_s}{V_p} = \dfrac{265}{230} = 1.15\;\text{A}\)</p>
+        <p><strong>(d)</strong> Any one of: resistive heating in the coils (\(I^2R\) losses); eddy currents in the iron core; hysteresis losses in the core; magnetic flux leakage between primary and secondary.</p>
+      </div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM TIPS
+════════════════════════════════════════════════ -->
+<section class="topic" id="tips">
+  <div class="topic-header">
+    <span class="topic-num" style="background:#dc2626;">!</span>
+    <h2>Exam Tips &amp; Common Pitfalls</h2>
+  </div>
+
+  <!-- GENERAL -->
+  <div class="tip-group">
+    <div class="tip-group-title">General Exam Technique</div>
+    <ul class="tip-list">
+      <li><span class="tip-key">Data booklet first.</span> Many equations (Coulomb's law, capacitance formulas, Biot&ndash;Savart results, Faraday's law) are provided. Know what's given so you don't waste time memorising them &mdash; focus on knowing <em>when</em> and <em>how</em> to use them.</li>
+      <li><span class="tip-key">Units check.</span> Before substituting, convert everything to SI. After getting an answer, verify the units make sense dimensionally &mdash; catches sign and formula errors.</li>
+      <li><span class="tip-key">Vectors need direction.</span> Whenever a question involves force, field, or velocity, state the direction explicitly (use Fleming's rules, right-hand rule, or coordinate signs). Marks are lost here every year.</li>
+      <li><span class="tip-key">Show working.</span> Method marks are awarded even if the final answer is wrong. Write the formula, substitute with units, then calculate. Never jump straight to a number.</li>
+      <li><span class="tip-key">Significant figures.</span> Give 2&ndash;3 s.f. unless told otherwise. Don't round intermediate steps &mdash; only round the final answer.</li>
+    </ul>
+  </div>
+
+  <!-- ELECTRIC FIELDS -->
+  <div class="tip-group">
+    <div class="tip-group-title">17 &middot; Electric Fields</div>
+    <ul class="tip-list">
+      <li><span class="tip-warn">Common mistake:</span> Confusing \(E\) (vector, N C\(^{-1}\)) with \(V\) (scalar, J C\(^{-1}\)). Field has direction; potential does not.</li>
+      <li>\(V\) due to a negative charge is <strong>negative</strong>. Don't drop the sign &mdash; it matters when summing potentials from multiple charges.</li>
+      <li>\(E = -dV/dr\) means \(\mathbf{E}\) points from high \(V\) to low \(V\). On a sketch, field lines are perpendicular to equipotentials and point "downhill".</li>
+      <li>"Work done <em>by an external agent</em>" and "work done <em>by the field</em>" are equal in magnitude but <strong>opposite in sign</strong>. Read the question carefully.</li>
+      <li>For two point charges: use Coulomb's law for force, sum potentials algebraically (scalars) but add fields as <strong>vectors</strong> (resolve components).</li>
+    </ul>
+  </div>
+
+  <!-- CAPACITANCE -->
+  <div class="tip-group">
+    <div class="tip-group-title">18 &middot; Capacitance</div>
+    <ul class="tip-list">
+      <li><span class="tip-warn">Opposite to resistors:</span> Capacitors in <strong>parallel</strong> add directly (\(C = C_1 + C_2\)); in <strong>series</strong> it's the reciprocal rule. This is the reverse of resistors &mdash; don't mix them up.</li>
+      <li>After \(5\tau\) the capacitor is effectively fully charged/discharged (&gt; 99%). If a question says "a long time", treat it as \(t \to \infty\).</li>
+      <li>Energy stored = \(\frac{1}{2}CV^2\). The area under a \(V\)-\(Q\) graph is also the energy stored (triangle for a linear capacitor).</li>
+      <li>During discharge, \(Q\), \(V\), and \(I\) all decay exponentially with the <strong>same</strong> time constant \(\tau = RC\). During charging, \(Q\) and \(V\) rise but \(I\) still decays.</li>
+      <li>If asked to find \(\tau\) from a graph: read off the time at which the value falls to \(0.37\) (i.e. \(1/e\)) of its initial value, or rises to \(0.63\).</li>
+    </ul>
+  </div>
+
+  <!-- CURRENT -->
+  <div class="tip-group">
+    <div class="tip-group-title">19 &middot; Current of Electricity</div>
+    <ul class="tip-list">
+      <li>Drift velocity is extremely slow (order of mm s\(^{-1}\)). The <em>signal</em> travels near light speed, but the <em>electrons</em> do not.</li>
+      <li>Ohm's law (\(V = IR\)) only applies to <strong>ohmic conductors at constant temperature</strong>. A filament lamp or diode is not ohmic &mdash; say so explicitly if asked.</li>
+      <li>\(V = \varepsilon - Ir\): as \(I\) increases, terminal p.d. \(V\) decreases. When \(I = 0\) (open circuit), \(V = \varepsilon\). When the load is short-circuited, \(V = 0\) and \(I = \varepsilon/r\).</li>
+      <li><span class="tip-key">Graph trick:</span> A \(V\) vs \(I\) graph for a real battery is a straight line with y-intercept = \(\varepsilon\) and gradient = \(-r\).</li>
+      <li>\(P = I^2R\) is useful when current is the same (series); \(P = V^2/R\) is useful when voltage is the same (parallel).</li>
+    </ul>
+  </div>
+
+  <!-- DC CIRCUITS -->
+  <div class="tip-group">
+    <div class="tip-group-title">20 &middot; D.C. Circuits</div>
+    <ul class="tip-list">
+      <li><span class="tip-key">Potential divider:</span> \(V_{\text{out}} = V_{\text{in}} \times R_2/(R_1+R_2)\). Output is across \(R_2\) (the bottom resistor). If a sensor (LDR, thermistor) replaces one resistor, think about how its resistance changes and what that does to \(V_{\text{out}}\).</li>
+      <li>A voltmeter in parallel with a component draws some current &mdash; this lowers the p.d. it measures. An <em>ideal</em> voltmeter has infinite resistance.</li>
+      <li><span class="tip-key">Kirchhoff strategy:</span> (1) Label all currents with directions. (2) Apply KCL at each junction. (3) Apply KVL around independent loops. (4) Solve simultaneous equations. If a current comes out negative, it simply flows opposite to your assumed direction.</li>
+      <li>For combined series-parallel networks: simplify from the inside out. Identify which resistors are truly in series (same current) vs truly in parallel (same p.d.).</li>
+    </ul>
+  </div>
+
+  <!-- ELECTROMAGNETISM -->
+  <div class="tip-group">
+    <div class="tip-group-title">21 &middot; Electromagnetism</div>
+    <ul class="tip-list">
+      <li><span class="tip-key">Fleming's Left-Hand Rule</span> (motor effect): thu<strong>M</strong>b = <strong>M</strong>otion/Force, <strong>F</strong>irst finger = <strong>F</strong>ield, se<strong>C</strong>ond finger = <strong>C</strong>urrent. Use for both \(F = BIL\sin\theta\) and \(F = Bqv\sin\theta\).</li>
+      <li>The magnetic force on a moving charge is always <strong>perpendicular</strong> to \(\mathbf{v}\). It changes direction but not speed &mdash; so it does <strong>no work</strong> and the kinetic energy stays constant.</li>
+      <li>A charged particle in a uniform \(\mathbf{B}\) (perpendicular to \(\mathbf{v}\)) moves in a <strong>circle</strong>. Set \(Bqv = mv^2/r\) to find the radius.</li>
+      <li><span class="tip-key">Hall effect:</span> \(V_H = BI/(ntq)\). Semiconductors have much smaller \(n\) than metals, so they produce a <strong>much larger</strong> Hall voltage &mdash; this is why Hall probes use semiconductor slices.</li>
+      <li>For the force between two parallel wires: currents in the <strong>same</strong> direction attract; <strong>opposite</strong> directions repel.</li>
+    </ul>
+  </div>
+
+  <!-- EM INDUCTION -->
+  <div class="tip-group">
+    <div class="tip-group-title">22 &middot; Electromagnetic Induction</div>
+    <ul class="tip-list">
+      <li><span class="tip-warn">Most common error:</span> Lenz's law says the induced current opposes the <em>change</em> in flux &mdash; not the flux itself. If flux is increasing, the induced current creates a field opposing the increase. If flux is decreasing, it tries to maintain it.</li>
+      <li><span class="tip-key">Phase trap:</span> For a rotating coil, flux linkage is \(NBA\cos(\omega t)\) but EMF is \(NBA\omega\sin(\omega t)\). EMF is <strong>maximum</strong> when flux linkage is <strong>zero</strong> (coil parallel to \(\mathbf{B}\)), and EMF is <strong>zero</strong> when flux linkage is maximum (coil perpendicular to \(\mathbf{B}\)).</li>
+      <li>Faraday's law: \(\varepsilon = -d(N\Phi)/dt\). The magnitude of the EMF is the <strong>gradient</strong> of the flux linkage&ndash;time graph. Steeper graph = larger EMF.</li>
+      <li>A straight conductor of length \(L\) moving at speed \(v\) perpendicular to \(\mathbf{B}\): the induced EMF is simply \(\varepsilon = BLv\) (a useful shortcut derived from Faraday's law).</li>
+    </ul>
+  </div>
+
+  <!-- AC -->
+  <div class="tip-group">
+    <div class="tip-group-title">23 &middot; Alternating Currents</div>
+    <ul class="tip-list">
+      <li><span class="tip-key">RMS means "equivalent d.c.".</span> An a.c. supply of \(V_{\text{rms}} = 230\) V delivers the same average power to a resistor as a 230 V d.c. supply. Peak voltage is \(V_0 = 230\sqrt{2} \approx 325\) V.</li>
+      <li>\(V_{\text{rms}} = V_0/\sqrt{2}\) only applies to <strong>sinusoidal</strong> waveforms. If the waveform is square, triangular, etc., you must calculate RMS from first principles (integrate \(V^2\) over one period).</li>
+      <li><span class="tip-key">Transformer:</span> Step-up voltage = step-down current (and vice versa). Power is conserved for an ideal transformer: \(V_p I_p = V_s I_s\).</li>
+      <li>Real transformers lose energy to: (1) resistive heating in coils (\(I^2R\) losses), (2) eddy currents in the core (reduced by lamination), (3) hysteresis losses in the core, (4) flux leakage. Know all four for "explain" questions.</li>
+      <li>On a CRO trace: \(V_0\) is read from the peak, and the period \(T\) from one complete cycle. Then \(f = 1/T\) and \(V_{\text{rms}} = V_0/\sqrt{2}\).</li>
+    </ul>
+  </div>
+
+</section>
+
 <footer>
   A-level H2 Physics (9749) &nbsp;·&nbsp; Electricity &amp; Magnetism &nbsp;·&nbsp; All equations rendered with MathJax
 </footer>
 
+<!-- ═══════════════════════════════════════════════
+     FLOATING DATA BOOKLET (visible on Practice tab)
+════════════════════════════════════════════════ -->
+<div class="formula-float" id="formulaFloat">
+  <div class="formula-float-hdr" id="formulaToggle">
+    <span>Data Booklet — Formulae</span>
+    <span class="ff-arrow">&#9660;</span>
+  </div>
+  <div class="formula-float-body">
+
+    <div class="ff-topic">17 &middot; Electric Fields</div>
+    <div class="ff-row"><span class="ff-label">Coulomb's Law</span><span class="ff-eq">\(F = \dfrac{Qq}{4\pi\varepsilon_0 r^2}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Field (point Q)</span><span class="ff-eq">\(E = \dfrac{Q}{4\pi\varepsilon_0 r^2}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Potential</span><span class="ff-eq">\(V = \dfrac{Q}{4\pi\varepsilon_0 r}\)</span></div>
+    <div class="ff-row"><span class="ff-label">E–V relation</span><span class="ff-eq">\(E = -\dfrac{dV}{dr}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Work done</span><span class="ff-eq">\(W = QV\)</span></div>
+
+    <div class="ff-topic">18 &middot; Capacitance</div>
+    <div class="ff-row"><span class="ff-label">Definition</span><span class="ff-eq">\(C = \dfrac{Q}{V}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Parallel plate</span><span class="ff-eq">\(C = \dfrac{\varepsilon_0 \varepsilon_r A}{d}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Energy stored</span><span class="ff-eq">\(W = \tfrac{1}{2}QV = \tfrac{1}{2}CV^2 = \dfrac{Q^2}{2C}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Series</span><span class="ff-eq">\(\dfrac{1}{C} = \dfrac{1}{C_1}+\dfrac{1}{C_2}+\cdots\)</span></div>
+    <div class="ff-row"><span class="ff-label">Parallel</span><span class="ff-eq">\(C = C_1 + C_2 + \cdots\)</span></div>
+    <div class="ff-row"><span class="ff-label">Discharge</span><span class="ff-eq">\(Q = Q_0\,e^{-t/RC}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Charge</span><span class="ff-eq">\(Q = Q_0(1 - e^{-t/RC})\)</span></div>
+
+    <div class="ff-topic">19 &middot; Current of Electricity</div>
+    <div class="ff-row"><span class="ff-label">Current</span><span class="ff-eq">\(I = \dfrac{\Delta Q}{\Delta t}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Drift velocity</span><span class="ff-eq">\(I = nAvq\)</span></div>
+    <div class="ff-row"><span class="ff-label">Resistivity</span><span class="ff-eq">\(R = \dfrac{\rho L}{A}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Power</span><span class="ff-eq">\(P = IV = I^2R = \dfrac{V^2}{R}\)</span></div>
+
+    <div class="ff-topic">20 &middot; D.C. Circuits</div>
+    <div class="ff-row"><span class="ff-label">EMF</span><span class="ff-eq">\(\varepsilon = \dfrac{W}{Q}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Terminal p.d.</span><span class="ff-eq">\(V = \varepsilon - Ir\)</span></div>
+    <div class="ff-row"><span class="ff-label">Series</span><span class="ff-eq">\(R = R_1 + R_2 + \cdots\)</span></div>
+    <div class="ff-row"><span class="ff-label">Parallel</span><span class="ff-eq">\(\dfrac{1}{R}=\dfrac{1}{R_1}+\dfrac{1}{R_2}+\cdots\)</span></div>
+    <div class="ff-row"><span class="ff-label">Pot. divider</span><span class="ff-eq">\(V_{\text{out}} = V_{\text{in}}\dfrac{R_2}{R_1+R_2}\)</span></div>
+
+    <div class="ff-topic">21 &middot; Electromagnetism</div>
+    <div class="ff-row"><span class="ff-label">Force (wire)</span><span class="ff-eq">\(F = BIL\sin\theta\)</span></div>
+    <div class="ff-row"><span class="ff-label">Force (charge)</span><span class="ff-eq">\(F = Bqv\sin\theta\)</span></div>
+    <div class="ff-row"><span class="ff-label">Long wire</span><span class="ff-eq">\(B = \dfrac{\mu_0 I}{2\pi d}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Flat coil</span><span class="ff-eq">\(B = \dfrac{\mu_0 N I}{2r}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Solenoid</span><span class="ff-eq">\(B = \mu_0 n I\)</span></div>
+    <div class="ff-row"><span class="ff-label">Hall voltage</span><span class="ff-eq">\(V_H = \dfrac{BI}{ntq}\)</span></div>
+
+    <div class="ff-topic">22 &middot; EM Induction</div>
+    <div class="ff-row"><span class="ff-label">Flux</span><span class="ff-eq">\(\Phi = BA\cos\theta\)</span></div>
+    <div class="ff-row"><span class="ff-label">Flux linkage</span><span class="ff-eq">\(N\Phi = NBA\cos\theta\)</span></div>
+    <div class="ff-row"><span class="ff-label">Faraday's Law</span><span class="ff-eq">\(\varepsilon = -\dfrac{d(N\Phi)}{dt}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Rotating coil</span><span class="ff-eq">\(\varepsilon = \varepsilon_0\sin(\omega t)\)</span></div>
+
+    <div class="ff-topic">23 &middot; Alternating Currents</div>
+    <div class="ff-row"><span class="ff-label">RMS voltage</span><span class="ff-eq">\(V_{\text{rms}} = \dfrac{V_0}{\sqrt{2}}\)</span></div>
+    <div class="ff-row"><span class="ff-label">RMS current</span><span class="ff-eq">\(I_{\text{rms}} = \dfrac{I_0}{\sqrt{2}}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Mean power</span><span class="ff-eq">\(P = V_{\text{rms}}I_{\text{rms}} = \tfrac{1}{2}V_0 I_0\)</span></div>
+    <div class="ff-row"><span class="ff-label">Turns ratio</span><span class="ff-eq">\(\dfrac{V_s}{V_p} = \dfrac{N_s}{N_p}\)</span></div>
+    <div class="ff-row"><span class="ff-label">Ideal transf.</span><span class="ff-eq">\(V_p I_p = V_s I_s\)</span></div>
+
+    <div class="ff-topic">Constants</div>
+    <div class="ff-row"><span class="ff-label">\(\varepsilon_0\)</span><span class="ff-eq">\(8.85 \times 10^{-12}\;\text{F m}^{-1}\)</span></div>
+    <div class="ff-row"><span class="ff-label">\(\mu_0\)</span><span class="ff-eq">\(4\pi \times 10^{-7}\;\text{H m}^{-1}\)</span></div>
+    <div class="ff-row"><span class="ff-label">\(e\)</span><span class="ff-eq">\(1.60 \times 10^{-19}\;\text{C}\)</span></div>
+
+  </div>
 </div>
+
+</div>
+
+<script>
+  // ── Tab switching ──
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.topic').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (typeof MathJax !== 'undefined') MathJax.typeset();
+      drawPlots();
+      // Show/hide floating data booklet on Practice tab
+      const ff = document.getElementById('formulaFloat');
+      ff.style.display = (btn.dataset.tab === 'pq') ? 'flex' : 'none';
+      if (btn.dataset.tab === 'pq' && typeof MathJax !== 'undefined') {
+        MathJax.typesetPromise([ff]);
+      }
+    });
+  });
+
+  // ── Floating data booklet toggle ──
+  (function() {
+    const ff = document.getElementById('formulaFloat');
+    const hdr = document.getElementById('formulaToggle');
+    hdr.addEventListener('click', () => {
+      ff.classList.toggle('folded');
+    });
+  })();
+
+  // ── RC circuit plots ──
+  function drawPlots() {
+    drawRC('plot-discharge', 'discharge');
+    drawRC('plot-charge', 'charge');
+  }
+
+  function drawRC(canvasId, mode) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || canvas.offsetParent === null) return; // not visible
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    const W = rect.width, H = rect.height;
+
+    const pad = { top: 20, right: 20, bottom: 36, left: 48 };
+    const gW = W - pad.left - pad.right;
+    const gH = H - pad.top - pad.bottom;
+
+    // Clear
+    ctx.clearRect(0, 0, W, H);
+
+    // Axes
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top);
+    ctx.lineTo(pad.left, pad.top + gH);
+    ctx.lineTo(pad.left + gW, pad.top + gH);
+    ctx.stroke();
+
+    // Grid lines
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 0.5;
+    for (let i = 1; i <= 4; i++) {
+      const y = pad.top + gH - (i / 4) * gH;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(pad.left + gW, y);
+      ctx.stroke();
+    }
+
+    // tau marker (dashed vertical at t = RC = 1 on normalised axis)
+    // We plot from t=0 to t=5*tau, so tau is at 1/5 of the width
+    const tauX = pad.left + gW * (1 / 5);
+    ctx.save();
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(tauX, pad.top);
+    ctx.lineTo(tauX, pad.top + gH);
+    ctx.stroke();
+    ctx.restore();
+
+    // Axis labels
+    ctx.fillStyle = '#64748b';
+    ctx.font = '11px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('t / RC', pad.left + gW / 2, H - 4);
+
+    // Y-axis ticks
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    const yLabels = ['0', '0.25', '0.50', '0.75', '1.00'];
+    for (let i = 0; i <= 4; i++) {
+      const y = pad.top + gH - (i / 4) * gH;
+      ctx.fillText(yLabels[i], pad.left - 6, y);
+    }
+
+    // X-axis ticks
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    for (let i = 0; i <= 5; i++) {
+      const x = pad.left + (i / 5) * gW;
+      ctx.fillText(i.toString(), x, pad.top + gH + 6);
+      if (i > 0) {
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top + gH);
+        ctx.lineTo(x, pad.top + gH + 4);
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.stroke();
+      }
+    }
+
+    // tau label
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('\u03C4', tauX, pad.top + 4);
+
+    // 37% marker for discharge / 63% marker for charge
+    const markerY = mode === 'discharge'
+      ? pad.top + gH - (Math.exp(-1)) * gH
+      : pad.top + gH - (1 - Math.exp(-1)) * gH;
+    ctx.save();
+    ctx.setLineDash([3, 3]);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, markerY);
+    ctx.lineTo(tauX, markerY);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(mode === 'discharge' ? '0.37' : '0.63', pad.left - 6, markerY);
+
+    // Plot curves
+    const steps = 300;
+    function plotCurve(fn, color, lineW) {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineW || 2;
+      for (let i = 0; i <= steps; i++) {
+        const t = (i / steps) * 5; // 0 to 5 tau
+        const val = fn(t);
+        const x = pad.left + (i / steps) * gW;
+        const y = pad.top + gH - val * gH;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    if (mode === 'discharge') {
+      // Q/Q0 = V/V0 = e^(-t/tau)
+      plotCurve(t => Math.exp(-t), '#d97706', 2.5);
+      // I/I0 = e^(-t/tau)  (same shape, different color to show both are plotted)
+      plotCurve(t => Math.exp(-t), '#dc2626', 1.5);
+    } else {
+      // Q/Q0 = V/V0 = 1 - e^(-t/tau)
+      plotCurve(t => 1 - Math.exp(-t), '#059669', 2.5);
+      // I/I0 = e^(-t/tau)  (current still decays)
+      plotCurve(t => Math.exp(-t), '#dc2626', 1.5);
+    }
+  }
+
+  // Draw on load and on resize
+  window.addEventListener('load', () => setTimeout(drawPlots, 100));
+  window.addEventListener('resize', drawPlots);
+</script>
 </body>
 </html>
