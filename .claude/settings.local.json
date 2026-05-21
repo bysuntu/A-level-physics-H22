@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.scribd.com)",
+      "WebSearch",
+      "WebFetch(domain:www.miniphysics.com)",
+      "WebFetch(domain:eclatinstitute.sg)",
+      "WebFetch(domain:www.seab.gov.sg)",
+      "Bash(python:*)",
+      "Bash(pip install:*)"
+    ]
+  }
+}
